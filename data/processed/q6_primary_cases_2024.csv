@@ -1,0 +1,5 @@
+County,coverage_ratio_physical,physical_rank,lower_physical,access_index,access_rank,equal_min_rank,equal_max_rank,interpretation
+Lac qui Parle,0.181746092782694,4,0.22366398436055274,1.792971329271812,63,61,64,Persistent low utilization despite relatively high geographic site access; distance is not a likely primary explanation.
+Nicollet,0.1661177628406807,2,0.223758452306164,0.8799004750801217,24,21,30,Persistent low utilization with somewhat lower site access; regional travel or neighboring-hub use remains plausible.
+Norman,0.168492687459957,3,0.22366118707364324,2.6460714414203244,79,76,85,Persistent low utilization despite very high geographic site access; distance is not a likely primary explanation.
+Pope,0.1508700337660545,1,0.22371259560038018,1.139183643580681,38,38,42,Persistent low utilization with approximately middle-range geographic site access; no evidence of an extreme spatial-access deficit.

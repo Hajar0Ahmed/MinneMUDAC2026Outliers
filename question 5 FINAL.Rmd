@@ -1,0 +1,657 @@
+---
+title: "Question 5: SNAP and Food Shelf Use (corrected)"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 5)
+library(tidyverse)   # dplyr, tidyr, ggplot2, readr, stringr, purrr
+library(lubridate)
+library(readxl)
+library(zoo)         # na.approx(): fill gaps
+library(sandwich)    # robust standard errors
+library(lmtest)      # coeftest()
+library(writexl)
+
+# ---- SETTINGS ---------------------------------------------------------
+SNAP_SOURCE <- "xlsx"   # "pdf"  = the five state PDFs in data/SNAP (your original route; data to Mar 2026)
+                        # "xlsx" = the SNAP dashboard workbook (same series, data to Aug 2026; we stop at Jul 2026)
+SNAP_XLSX   <- "data/snap-dashboard-data-through-august-2026.xlsx"
+END   <- as.Date("2026-07-01")   # competition rule: no August 2026 data of any kind
+START <- as.Date("2022-01-01")
+dir.create("output", showWarnings = FALSE)
+
+# Make county names comparable across files: "LAKE OF THE WOODS" = "Lake of the Woods" = "Lake of Woods"
+norm_name <- function(x) {
+  x <- gsub("[^A-Z]", "", toupper(x))
+  x <- sub("^SAINT", "ST", x)
+  sub("OFTHE", "OF", x)
+}
+# Regression helper: coefficients with standard errors clustered by county
+# (a county's months are correlated with each other, so ordinary errors are too small)
+cl_coef <- function(model, cluster, keep = NULL) {
+  ct <- coeftest(model, vcov = vcovCL(model, cluster = cluster))
+  out <- tibble(term = rownames(ct), estimate = ct[, 1], se = ct[, 2], p = ct[, 4])
+  if (!is.null(keep)) out <- filter(out, str_detect(term, keep))
+  out
+}
+```
+
+# Chunk 1: Food shelf activity by month (unchanged from your file)
+
+```{r chunk1}
+fs <- read_excel("data/org_FSStats.xlsx", guess_max = 30000)
+food_shelf_types <- c("Brick and Mortar Site", "Brick and Mortar Sites", "Food Shelf",
+                      "Mobile", "Outreach Program", "Tribal Program", "College Campus Program")
+fs_month <- fs |>
+  mutate(date = as.Date(DateForSearch)) |>
+  filter(date <= END,                      # competition rule: no August 2026
+         AgencyType %in% food_shelf_types) |>
+  select(site = `_id_site`, date, county = County,
+         visits = HouseholdsReg, pounds = PoundsReg, individuals = IndividualsReg) |>
+  distinct() |>
+  mutate(visits = ifelse(visits > 3 * individuals, NA, visits),
+         pounds = ifelse(pounds < 0, NA, pounds),
+         county = case_when(
+           county %in% c("Hennepin-Minneapolis", "Hennepin-Suburbs") ~ "Hennepin",
+           county %in% c("Ramsey-Saint Paul", "Ramsey-Suburbs") ~ "Ramsey",
+           county == "Saint Louis" ~ "St. Louis",
+           county == "Lac Qui Parle" ~ "Lac qui Parle",
+           TRUE ~ county)) |>
+  filter(!is.na(county))
+
+state_month <- fs_month |>
+  group_by(date) |>
+  summarise(visits = sum(visits, na.rm = TRUE), pounds = sum(pounds, na.rm = TRUE),
+            individuals = sum(individuals, na.rm = TRUE), n_sites = n_distinct(site))
+range(fs_month$date); nrow(state_month)
+state_month |> slice(c(1, 14, 15, 26, 51, 55)) |> select(date, visits, n_sites)
+```
+
+**What to notice (new):** the number of reporting sites is *not* constant: it rises from about 431 in March 2022 to about 478 in March 2023. That is why the main comparisons below use only sites that report consistently.
+
+# Chunk 2: Read the SNAP data
+
+Pick ONE route with `SNAP_SOURCE` in the setup chunk. **If your PDFs are not in a folder called `data/SNAP/`, or you do not have all the years, use `"xlsx"`.** The chunks for the route you did not choose do nothing, so you can run every chunk in order, or knit.
+
+## Chunk 2a: Route 1, the state PDFs (unchanged logic from your file)
+
+```{r chunk2a_pdf}
+if (SNAP_SOURCE == "pdf") {
+  library(pdftools)
+  month_pattern <- "(\\d{4})\\s+(January|February|March|April|May|June|July|August|September|October|November|December)"
+  row_pattern <- "^\\s*(\\d{1,3}|TOTAL)\\s+(.*?)\\s*([\\d,]+)\\s+([\\d,]+)\\s+([\\d,.]+)\\s*$"
+  read_snap_pdf <- function(file) {
+    pages <- pdf_text(file); rows <- list(); current_month <- as.Date(NA)
+    for (page in pages) {
+      m <- str_match(page, month_pattern)
+      if (!is.na(m[1])) current_month <- as.Date(paste(m[2], match(m[3], month.name), 1, sep = "-"))
+      lines <- str_split(page, "\n")[[1]]
+      hit <- str_match(lines, row_pattern); hit <- hit[!is.na(hit[, 1]), , drop = FALSE]
+      if (nrow(hit) > 0) rows[[length(rows) + 1]] <- tibble(file = basename(file), date = current_month, code = hit[, 2],
+          name = str_squish(hit[, 3]), cases = parse_number(hit[, 4]), people = parse_number(hit[, 5]), dollars = parse_number(hit[, 6]))
+    }
+    bind_rows(rows)
+  }
+  snap_files <- list.files("data/SNAP", pattern = "\\.pdf$", full.names = TRUE)
+  if (length(snap_files) == 0) stop("No PDFs found in data/SNAP/. Put the SNAP PDFs in that folder, or set SNAP_SOURCE <- \"xlsx\" in the setup chunk.")
+  snap_raw <- bind_rows(lapply(snap_files, read_snap_pdf)) |> filter(date <= END)
+  print(snap_raw |> group_by(file) |> summarise(first_month = min(date), last_month = max(date), months = n_distinct(date)))
+}
+```
+
+## Chunk 2b: Route 1, build the SNAP tables from the PDFs (unchanged logic)
+
+```{r chunk2b_pdf}
+if (SNAP_SOURCE == "pdf") {
+  print(snap_raw |> group_by(date) |>
+    summarise(sum_of_rows = sum(people[code != "TOTAL"]), total_row = sum(people[code == "TOTAL"])) |>
+    mutate(match = abs(total_row - sum_of_rows) <= 5) |> count(match))
+
+  snap_state <- snap_raw |> filter(code == "TOTAL") |> group_by(date) |>
+    summarise(snap_people = sum(people), snap_dollars = sum(dollars)) |>
+    filter(snap_people > 0) |> mutate(dollars_per_person = snap_dollars / snap_people)
+
+  snap_county <- snap_raw |> filter(code != "TOTAL") |> mutate(code = as.numeric(code)) |>
+    filter(code <= 87, people > 0) |> mutate(fips = sprintf("27%03d", 2 * code - 1)) |>
+    select(fips, name, date, cases, people, dollars)
+  print(range(snap_state$date))
+}
+```
+
+## Chunk 2c: Route 2, the dashboard workbook (recommended if you do not have the PDFs)
+
+Same series, same months: January 2022 shows 425,042 people and $96.3 million in both. The state's own PDF footnote says that since January 2022 Grant and Pope are combined in Western Prairie Human Services (WPHS) and listed on the old Pope line, so the workbook's "Pope" row is WPHS.
+
+```{r chunk2c_xlsx}
+if (SNAP_SOURCE == "xlsx") {
+  snap_x <- read_excel(SNAP_XLSX) |>
+    transmute(date = as.Date(Report_Month), name = toupper(CountyTribeName),
+              cases = CaseCount, people = PersonCount, dollars = Total_Net) |>
+    filter(date >= START, date <= END)
+  snap_state <- snap_x |> group_by(date) |>
+    summarise(snap_people = sum(people), snap_dollars = sum(dollars)) |>
+    mutate(dollars_per_person = snap_dollars / snap_people)
+  tribal <- c("MILLE LACS BAND", "RED LAKE NATION", "WHITE EARTH BAND")
+  snap_county <- snap_x |> filter(!name %in% tribal) |>
+    mutate(name = ifelse(name == "POPE", "WPHS", name), fips = NA_character_) |>
+    select(fips, name, date, cases, people, dollars)
+  print(range(snap_state$date))
+}
+```
+
+```{r snap_check}
+if (!exists("snap_state")) stop("snap_state was not built: check SNAP_SOURCE in the setup chunk and run the chunk for that route.")
+snap_state |> slice(1:3)     # Jan 2022 should show 425,042 people
+n_distinct(snap_county$name) # about 84-85 units
+```
+
+# Chunk 3: Build the county panel (new)
+
+One row per SNAP unit per month. Food shelf data are matched to the SNAP geography: Dodge + Steele + Waseca = MNPRAIRIE; Grant + Pope = WPHS. Only **stable sites** are used (sites reporting all three measures in at least 50 of the 55 months), with the few gaps filled by interpolation, so a change in the number of reporting sites cannot look like a change in need.
+
+```{r chunk3_panel}
+all_months <- seq(START, END, by = "month")
+unit_of <- function(county) {
+  k <- norm_name(county)
+  case_when(k %in% c("DODGE", "STEELE", "WASECA") ~ "MNPRAIRIE", k %in% c("GRANT", "POPE") ~ "WPHS", TRUE ~ k)
+}
+sum_na <- function(x) if (all(is.na(x))) NA_real_ else sum(x, na.rm = TRUE)
+fill_gaps <- function(x) if (sum(!is.na(x)) < 2) x else na.approx(x, na.rm = FALSE, rule = 2)
+
+site_m <- fs_month |> filter(date >= START) |>
+  group_by(site, county, date) |>
+  summarise(across(c(visits, pounds, individuals), sum_na), .groups = "drop")
+stable_ids <- site_m |> filter(!is.na(visits), !is.na(pounds), !is.na(individuals)) |>
+  count(site) |> filter(n >= 50) |> pull(site)
+site_county <- site_m |> group_by(site) |> summarise(county = first(county))
+cat("Stable sites:", length(stable_ids), "of", n_distinct(site_m$site), "\n")
+
+fs_unit <- site_m |> filter(site %in% stable_ids) |> select(-county) |>
+  complete(site, date = all_months) |> arrange(site, date) |>
+  group_by(site) |> mutate(across(c(visits, pounds, individuals), fill_gaps)) |> ungroup() |>
+  left_join(site_county, by = "site") |>
+  mutate(unit = unit_of(county)) |>
+  group_by(unit, date) |>
+  summarise(across(c(visits, pounds, individuals), ~ sum(.x, na.rm = TRUE)), .groups = "drop")
+
+snap_unit <- snap_county |> mutate(unit = norm_name(name)) |>
+  select(unit, date, persons = people, dollars)
+
+panel <- inner_join(fs_unit, snap_unit, by = c("unit", "date")) |>
+  mutate(bpp = dollars / persons) |>              # SNAP dollars per person: how generous SNAP is
+  filter(visits > 0, individuals > 0, pounds > 0, date <= END)
+cat("SNAP units:", n_distinct(panel$unit), " unit-months:", nrow(panel), "\n")
+
+state <- panel |> group_by(date) |>
+  summarise(visits = sum(visits), pounds = sum(pounds), individuals = sum(individuals),
+            snap = sum(persons), bpp = sum(dollars) / sum(persons), .groups = "drop") |> arrange(date)
+```
+
+# Part 1. Do SNAP and food shelf use move together, or does one replace the other?
+
+## Chunk 4a: Across counties
+
+```{r chunk4a}
+between <- panel |> group_by(unit) |> summarise(across(c(visits, individuals, pounds, persons), mean), .groups = "drop")
+between_tbl <- map_dfr(c("visits", "individuals", "pounds"), function(y) {
+  m <- lm(log(between[[y]]) ~ log(between$persons))
+  tibble(measure = y, elasticity = round(coef(m)[[2]], 2), r_squared = round(summary(m)$r.squared, 2))
+})
+between_tbl
+```
+
+## Chunk 4b: Over time, statewide
+
+```{r chunk4b}
+yoy <- function(x) log(x) - lag(log(x), 12)
+state_g <- state |> mutate(across(c(visits, individuals, pounds, snap), yoy, .names = "g_{.col}"))
+
+chart_index <- state |>
+  transmute(date, `SNAP persons` = snap, Visits = visits, `Individuals served` = individuals, Pounds = pounds) |>
+  pivot_longer(-date) |> group_by(name) |>
+  mutate(index = 100 * value / mean(value[year(date) == 2022])) |>
+  ggplot(aes(date, index, color = name)) + geom_line(linewidth = 0.9) +
+  geom_vline(xintercept = as.Date("2023-04-01"), linetype = "dashed") +
+  labs(title = "SNAP caseload and food shelf activity (2022 average = 100)",
+       subtitle = "SNAP caseload barely moves; food shelf activity swings widely.\nDashed line: first month of reduced SNAP benefits (Apr 2023)",
+       x = NULL, y = "Index", color = NULL, caption = "Sources: The Food Group (stable sites); MN DHS/DCYF SNAP reports") +
+  theme_minimal()
+chart_index
+ggsave("output/q5_chart1_index.png", chart_index, width = 8, height = 5, bg = "white")
+
+lead_lag <- map_dfr(0:12, function(k) {
+  d <- state_g |> mutate(snap_lag = lag(g_snap, k)) |> drop_na(snap_lag, g_visits)
+  tibble(snap_leads_by_months = k, n = nrow(d), visits = cor(d$g_visits, d$snap_lag),
+         individuals = cor(d$g_individuals, d$snap_lag), pounds = cor(d$g_pounds, d$snap_lag))
+})
+lead_lag |> mutate(across(where(is.numeric), ~ round(.x, 2)))
+```
+
+## Chunk 4c: Within a county over time (fixed effects)
+
+```{r chunk4c}
+panel_fe <- panel |> mutate(across(c(visits, individuals, pounds, persons, bpp), log, .names = "l_{.col}"),
+                            unit = factor(unit), dt = factor(date))
+fe_tbl <- map_dfr(c("visits", "individuals", "pounds"), function(y) {
+  panel_fe$y <- panel_fe[[paste0("l_", y)]]
+  m_unit <- lm(y ~ l_persons + unit, data = panel_fe)
+  m_both <- lm(y ~ l_persons + unit + dt, data = panel_fe)
+  bind_rows(cl_coef(m_unit, panel_fe$unit, "^l_persons$") |> mutate(model = "county effects only"),
+            cl_coef(m_both, panel_fe$unit, "^l_persons$") |> mutate(model = "county + month effects")) |>
+    mutate(measure = y, lo = estimate - 1.96 * se, hi = estimate + 1.96 * se)
+})
+fe_tbl |> select(measure, model, estimate, se, p, lo, hi) |> mutate(across(where(is.numeric), ~ round(.x, 3)))
+```
+
+## Chunk 4d: Across counties, per resident, 2024 (your original Chunk 5, matched by normalised names)
+
+```{r chunk4d}
+acs <- read_csv("data/public/acs_county.csv", show_col_types = FALSE) |>
+  filter(year == 2024) |>
+  mutate(fips = as.character(fips), key = norm_name(county)) |>
+  select(fips, key, population)
+
+snap_2024 <- snap_county |>
+  filter(format(date, "%Y") == "2024", !name %in% c("WPHS", "MNPRAIRIE")) |>
+  mutate(key = norm_name(name)) |> group_by(key) |> summarise(snap_people = mean(people))
+fs_2024 <- fs_month |> filter(format(date, "%Y") == "2024") |>
+  mutate(key = norm_name(county)) |> group_by(key) |> summarise(visits = sum(visits, na.rm = TRUE) / 12)
+
+county_2024 <- acs |> inner_join(snap_2024, by = "key") |> inner_join(fs_2024, by = "key") |>
+  mutate(snap_per_100 = 100 * snap_people / population, visits_per_100 = 100 * visits / population)
+nrow(county_2024)
+cor(county_2024$snap_per_100, county_2024$visits_per_100, method = "spearman")
+
+county_2024 |>
+  mutate(snap_group = factor(ntile(snap_per_100, 3), levels = 1:3, labels = c("Low SNAP use", "Medium SNAP use", "High SNAP use"))) |>
+  group_by(snap_group) |> summarise(counties = n(), visits_per_100 = mean(visits_per_100)) |>
+  ggplot(aes(snap_group, visits_per_100)) + geom_col(fill = "steelblue", width = 0.6) +
+  geom_text(aes(label = round(visits_per_100, 1)), vjust = -0.4, size = 5) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(x = NULL, y = "Food shelf visits per month per 100 residents",
+       title = "Counties with more SNAP use don't have more food shelf use",
+       subtitle = "Minnesota counties split into three equal groups by share of residents on SNAP, 2024",
+       caption = "Sources: The Food Group; MN DHS/DCYF SNAP reports; U.S. Census Bureau") + theme_minimal()
+ggsave("output/q5_chart2_counties.png", width = 7, height = 5, bg = "white")
+```
+
+# Part 2. What happens to food shelf activity when SNAP benefits change?
+
+## Chunk 5a: When did benefits change?
+
+```{r chunk5a}
+events <- state |> mutate(change_pct = 100 * (bpp / lag(bpp) - 1)) |>
+  filter(abs(change_pct) >= 3) |> select(date, bpp, change_pct)
+events |> mutate(across(where(is.numeric), ~ round(.x, 1)))
+
+# The big one: the largest one-month fall in benefit per person
+cut_date <- state |> mutate(chg = bpp / lag(bpp) - 1) |>
+  filter(date >= as.Date("2022-06-01"), date <= as.Date("2023-12-01")) |> slice_min(chg, n = 1) |> pull(date)
+cut_date
+state |> filter(date %in% (cut_date %m+% months(-1:0))) |> select(date, snap, bpp)
+```
+
+**Key point:** March 2023 still shows about $260 per person; the first reduced month is April 2023 (about $160, a fall of 38%). Your earlier "-29%" is the 12-month-average comparison, which includes one full-benefit month in the "after" window.
+
+## Chunk 5b: The small October changes
+
+```{r chunk5b}
+oct_tbl <- state |>
+  mutate(across(c(bpp, visits, individuals, pounds), ~ 100 * (.x / lag(.x) - 1))) |>
+  filter(month(date) == 10) |>
+  transmute(month = date, benefit_change_pct = bpp, visits_pct = visits, individuals_pct = individuals, pounds_pct = pounds)
+oct_tbl |> mutate(across(where(is.numeric), ~ round(.x, 1)))
+```
+
+## Chunk 5c: The big cut, statewide: before and after, and the trend before it
+
+```{r chunk5c}
+pre  <- state |> filter(date >= cut_date %m+% months(-12), date < cut_date)
+post <- state |> filter(date >= cut_date, date < cut_date %m+% months(12))
+before_after <- tibble(
+  measure = c("SNAP dollars per person per month", "Food shelf visits per month (stable sites)",
+              "Individuals per month", "Pounds per month"),
+  before = c(mean(pre$bpp), mean(pre$visits), mean(pre$individuals), mean(pre$pounds)),
+  after  = c(mean(post$bpp), mean(post$visits), mean(post$individuals), mean(post$pounds))) |>
+  mutate(change_pct = round(100 * (after / before - 1), 1), before = round(before), after = round(after))
+before_after
+
+# Same comparison with ALL reporting sites (the method in your original Chunk 3), for reference
+pre_all  <- state_month |> filter(date >= cut_date %m+% months(-12), date < cut_date)
+post_all <- state_month |> filter(date >= cut_date, date < cut_date %m+% months(12))
+round(100 * (mean(post_all$visits) / mean(pre_all$visits) - 1), 1)
+
+# THE IMPORTANT CHECK: was activity already rising BEFORE the cut? (growth vs. the same month a year earlier)
+trend_tbl <- state_g |>
+  filter(date >= as.Date("2023-01-01"), date <= as.Date("2024-12-01")) |>
+  mutate(period = case_when(date < cut_date ~ "BEFORE the cut (Jan-Mar 2023)",
+                            date < cut_date %m+% months(12) ~ "12 months after the cut",
+                            TRUE ~ "following months")) |>
+  group_by(period) |>
+  summarise(months = n(), across(c(g_visits, g_individuals, g_pounds, g_snap), ~ round(100 * mean(.x), 1)), .groups = "drop")
+trend_tbl
+
+chart_cut <- state |>
+  transmute(date, `SNAP dollars per person` = bpp, `Food shelf visits` = visits) |>
+  pivot_longer(-date) |>
+  ggplot(aes(date, value)) + geom_line(linewidth = 0.9) +
+  geom_vline(xintercept = cut_date, linetype = "dashed", color = "red") +
+  facet_wrap(~ name, ncol = 1, scales = "free_y") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "SNAP benefits fell in April 2023, but food shelf use was already rising",
+       subtitle = "Red dashed line: first month of reduced benefits",
+       x = NULL, y = NULL, caption = "Sources: The Food Group (stable sites); MN DHS/DCYF SNAP reports") + theme_minimal()
+chart_cut
+ggsave("output/q5_chart3_cut_timeline.png", chart_cut, width = 8, height = 6, bg = "white")
+```
+
+## Chunk 5d: Is it the SNAP cut or grocery prices? (links to Question 4)
+
+Two things happen in the same window: benefits fall, and the delayed effect of the 2022 grocery-price surge (Question 4) arrives. If both explain the same months, the data cannot tell them apart.
+
+```{r chunk5d}
+
+cpi_fallback <- tribble(
+  ~date, ~cpi_mw,
+  "2019-01-01", 226.291,
+  "2019-02-01", 228.347,
+  "2019-03-01", 227.372,
+  "2019-04-01", 226.719,
+  "2019-05-01", 228.0,
+  "2019-06-01", 227.95,
+  "2019-07-01", 226.822,
+  "2019-08-01", 227.101,
+  "2019-09-01", 227.677,
+  "2019-10-01", 227.603,
+  "2019-11-01", 227.343,
+  "2019-12-01", 227.074,
+  "2020-01-01", 228.471,
+  "2020-02-01", 229.829,
+  "2020-03-01", 230.242,
+  "2020-04-01", 236.431,
+  "2020-05-01", 238.881,
+  "2020-06-01", 238.991,
+  "2020-07-01", 236.51,
+  "2020-08-01", 234.738,
+  "2020-09-01", 232.725,
+  "2020-10-01", 234.245,
+  "2020-11-01", 232.725,
+  "2020-12-01", 233.262,
+  "2021-01-01", 235.377,
+  "2021-02-01", 235.863,
+  "2021-03-01", 236.421,
+  "2021-04-01", 237.832,
+  "2021-05-01", 238.169,
+  "2021-06-01", 239.911,
+  "2021-07-01", 241.889,
+  "2021-08-01", 243.148,
+  "2021-09-01", 245.802,
+  "2021-10-01", 249.139,
+  "2021-11-01", 249.142,
+  "2021-12-01", 250.622,
+  "2022-01-01", 255.381,
+  "2022-02-01", 258.599,
+  "2022-03-01", 263.145,
+  "2022-04-01", 267.001,
+  "2022-05-01", 271.278,
+  "2022-06-01", 274.159,
+  "2022-07-01", 278.158,
+  "2022-08-01", 280.226,
+  "2022-09-01", 281.284,
+  "2022-10-01", 282.059,
+  "2022-11-01", 282.201,
+  "2022-12-01", 283.1,
+  "2023-01-01", 285.715,
+  "2023-02-01", 286.503,
+  "2023-03-01", 286.052,
+  "2023-04-01", 286.499,
+  "2023-05-01", 288.196,
+  "2023-06-01", 287.256,
+  "2023-07-01", 288.763,
+  "2023-08-01", 288.105,
+  "2023-09-01", 288.729,
+  "2023-10-01", 288.13,
+  "2023-11-01", 286.562,
+  "2023-12-01", 287.002,
+  "2024-01-01", 289.498,
+  "2024-02-01", 289.635,
+  "2024-03-01", 289.478,
+  "2024-04-01", 289.107,
+  "2024-05-01", 289.396,
+  "2024-06-01", 289.56,
+  "2024-07-01", 291.065,
+  "2024-08-01", 290.118,
+  "2024-09-01", 292.066,
+  "2024-10-01", 292.313,
+  "2024-11-01", 292.523,
+  "2024-12-01", 291.229,
+  "2025-01-01", 294.516,
+  "2025-02-01", 293.462,
+  "2025-03-01", 296.054,
+  "2025-04-01", 294.13,
+  "2025-05-01", 295.1,
+  "2025-06-01", 297.298,
+  "2025-07-01", 295.847,
+  "2025-08-01", 298.807,
+  "2025-09-01", 299.475,
+  "2025-10-01", NA,
+  "2025-11-01", 296.341,
+  "2025-12-01", 296.429,
+  "2026-01-01", 297.34,
+  "2026-02-01", 301.197,
+  "2026-03-01", 300.276,
+  "2026-04-01", 302.196,
+  "2026-05-01", 304.128,
+  "2026-06-01", 302.643,
+  "2026-07-01", 302.475
+) |> mutate(date = as.Date(date), cpi_us = NA_real_, unemp_mn = NA_real_)
+
+cpi <- cpi_fallback |> arrange(date) |>
+  mutate(cpi_mw = na.approx(cpi_mw, na.rm = FALSE), g_cpi = log(cpi_mw) - lag(log(cpi_mw), 12),
+         price_lag14 = lag(g_cpi, 14)) |> select(date, price_lag14)
+pulse_dat <- state_g |> left_join(cpi, by = "date") |>
+  mutate(cut_pulse = as.integer(date >= cut_date & date < cut_date %m+% months(12))) |>
+  filter(date >= as.Date("2023-01-01"))
+hac <- function(m) coeftest(m, vcov = NeweyWest(m, lag = 12, prewhite = FALSE))
+pulse_tbl <- map_dfr(c("g_visits", "g_individuals", "g_pounds"), function(y) {
+  d <- pulse_dat |> mutate(yy = .data[[y]]) |> drop_na(yy, price_lag14)
+  a <- hac(lm(yy ~ cut_pulse, data = d)); b <- hac(lm(yy ~ cut_pulse + price_lag14, data = d))
+  tibble(measure = y, n = nrow(d), cut_alone = a["cut_pulse", 1], p_alone = a["cut_pulse", 4],
+         cut_with_prices = b["cut_pulse", 1], p_with_prices = b["cut_pulse", 4])
+})
+pulse_tbl |> mutate(across(where(is.numeric), ~ round(.x, 3)))
+cor(pulse_dat$cut_pulse, pulse_dat$price_lag14, use = "complete.obs")
+```
+
+## Chunk 5e: Did counties that lost more see bigger increases? (dose-response)
+
+```{r chunk5e}
+intensity <- panel |> group_by(unit) |>
+  summarise(pre  = mean(bpp[date >= cut_date %m+% months(-3) & date < cut_date]),
+            post = mean(bpp[date >= cut_date & date < cut_date %m+% months(3)]), .groups = "drop") |>
+  mutate(cut10 = (100 * (1 - post / pre)) / 10)           # size of the cut in units of 10 percentage points
+summary(10 * intensity$cut10)
+size <- panel |> group_by(unit) |> summarise(size = mean(visits), .groups = "drop") |> left_join(intensity, by = "unit")
+cor(size$cut10, log(size$size))     # strongly negative: the biggest cuts were in the smallest counties
+
+es_dat <- panel |> left_join(select(intensity, unit, cut10), by = "unit") |>
+  mutate(rel = interval(cut_date, date) %/% months(1), t = interval(START, date) %/% months(1)) |>
+  filter(rel >= -12, rel <= 15) |>
+  mutate(across(c(visits, individuals, pounds), log, .names = "l_{.col}"), unit = factor(unit), dt = factor(date))
+
+did_tbl <- map_dfr(c("visits", "individuals", "pounds"), function(y) {
+  d <- es_dat |> mutate(yy = .data[[paste0("l_", y)]], pc = as.integer(rel >= 0) * cut10)
+  m1 <- lm(yy ~ pc + unit + dt, data = d); m2 <- lm(yy ~ pc + unit + dt + unit:t, data = d)
+  bind_rows(cl_coef(m1, d$unit, "^pc$") |> mutate(model = "county + month effects"),
+            cl_coef(m2, d$unit, "^pc$") |> mutate(model = "plus a trend for each county")) |>
+    mutate(measure = y, lo = estimate - 1.96 * se, hi = estimate + 1.96 * se)
+})
+did_tbl |> select(measure, model, estimate, se, p, lo, hi) |> mutate(across(where(is.numeric), ~ round(.x, 3)))
+
+es_one <- function(y, ref = -1) {
+  d <- es_dat |> mutate(yy = .data[[paste0("l_", y)]], relf = relevel(factor(rel), ref = as.character(ref)))
+  X <- model.matrix(~ relf:cut10, d); X <- X[, colnames(X) != "(Intercept)", drop = FALSE]
+  X <- X[, !grepl(paste0("relf", ref, ":"), colnames(X), fixed = TRUE), drop = FALSE]
+  d$X <- X
+  m <- lm(yy ~ X + unit + dt, data = d)
+  cl_coef(m, d$unit, "^Xrelf") |>
+    mutate(rel = as.integer(str_match(term, "relf(-?\\d+)")[, 2]), measure = y, lo = estimate - 1.96 * se, hi = estimate + 1.96 * se)
+}
+es_all <- map_dfr(c("visits", "individuals", "pounds"), es_one) |> arrange(measure, rel)
+chart_es <- ggplot(es_all, aes(rel, estimate)) +
+  geom_hline(yintercept = 0, color = "grey50") + geom_vline(xintercept = -0.5, linetype = "dashed") +
+  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = 0.2) + geom_line() + geom_point(size = 1) +
+  facet_wrap(~ measure, ncol = 1) +
+  labs(title = "Do counties with bigger SNAP cuts see bigger changes in food shelf activity?",
+       subtitle = "Effect per 10-point larger cut, by month relative to the cut\n(reference: the month before); shaded band = 95% interval",
+       x = "Months relative to the cut (0 = first reduced month)", y = "Log points") + theme_minimal()
+chart_es
+ggsave("output/q5_chart4_event_study.png", chart_es, width = 8, height = 7, bg = "white")
+```
+
+## Chunk 5f: Within-county benefit changes (lags 0 to 3 months)
+
+```{r chunk5f}
+lag_by_unit <- function(x, unit, k) ave(x, unit, FUN = function(v) dplyr::lag(v, k))
+bd <- panel |> arrange(unit, date) |> mutate(lb = log(bpp), across(c(visits, individuals, pounds), log, .names = "l_{.col}"))
+for (k in 0:3) bd[[paste0("b", k)]] <- lag_by_unit(bd$lb, bd$unit, k)
+bd <- bd |> filter(!is.na(b3)) |> mutate(unit = factor(unit), dt = factor(date))
+ben_tbl <- map_dfr(c("visits", "individuals", "pounds"), function(y) {
+  bd$yy <- bd[[paste0("l_", y)]]
+  m <- lm(yy ~ b0 + b1 + b2 + b3 + unit + dt, data = bd)
+  cl_coef(m, bd$unit, "^b[0-3]$") |> mutate(measure = y)
+})
+ben_tbl |> select(measure, term, estimate, se, p) |> mutate(across(where(is.numeric), ~ round(.x, 3)))
+```
+
+## Chunk 5g: The 2025-26 changes (your original Chunk 4, relabelled)
+
+```{r chunk5g}
+compare_years <- function(data, start, end) {
+  after  <- data |> filter(date >= as.Date(start), date <= as.Date(end))
+  before <- data |> filter(date >= as.Date(start) - years(1), date <= as.Date(end) - years(1))
+  tibble(visits_change = 100 * (sum(after$visits) / sum(before$visits) - 1),
+         pounds_change = 100 * (sum(after$pounds) / sum(before$pounds) - 1),
+         individuals_change = 100 * (sum(after$individuals) / sum(before$individuals) - 1))
+}
+snap_events <- bind_rows(
+  compare_years(state, "2023-04-01", "2024-03-01") |> mutate(period = "12 months AFTER the Apr 2023 cut"),
+  compare_years(state, "2025-05-01", "2025-10-01") |> mutate(period = "6 months BEFORE Nov 2025"),
+  compare_years(state, "2025-11-01", "2026-02-01") |> mutate(period = "4 months AFTER Nov 2025"),
+  compare_years(state, "2026-03-01", "2026-07-01") |> mutate(period = "5 months AFTER Mar 2026")) |>
+  select(period, everything()) |> mutate(across(where(is.numeric), ~ round(.x, 1)))
+snap_events
+
+late_tbl <- state_g |> filter(date >= as.Date("2025-09-01")) |>
+  transmute(month = date, snap_persons_pct = 100 * g_snap, visits_pct = 100 * g_visits,
+            individuals_pct = 100 * g_individuals, pounds_pct = 100 * g_pounds) |>
+  mutate(across(where(is.numeric), ~ round(.x, 1)))
+late_tbl
+```
+
+# Part 3: Does the relationship differ across locations? (your original Chunk 6, bugs fixed)
+
+What changed from your first version: (1) the "steady sites" rule now counts **distinct months**, not rows (the old rule dropped 23 steady sites that had a duplicate row in some month); (2) the SNAP loss is measured March to April 2023 (the old Feb-to-Mar dates barely changed); (3) results are shown both **unweighted** (every county counts once) and **weighted by size** (a county with 500,000 visits counts more than one with 1,000), because small counties give very noisy percentages; (4) a graph is added; (5) a split by metro vs. rural for the within-county link.
+
+```{r chunk6}
+win <- function(d) d >= cut_date %m+% months(-12) & d < cut_date %m+% months(12)   # 12 months before and 12 after the cut
+
+steady_sites <- fs_month |>
+  filter(win(date), !is.na(visits)) |>
+  group_by(site) |> summarise(n = n_distinct(date)) |>          # distinct months (the old code counted rows)
+  filter(n == 24) |> pull(site)
+
+county_change <- fs_month |>
+  filter(site %in% steady_sites, win(date)) |>
+  mutate(key = norm_name(county), period = ifelse(date < cut_date, "before", "after")) |>
+  group_by(key, period) |> summarise(visits = sum(visits, na.rm = TRUE), .groups = "drop") |>
+  pivot_wider(names_from = period, values_from = visits) |>
+  mutate(visits_change = 100 * (after / before - 1))
+
+# The benefit fall is from the month BEFORE the cut to the first reduced month (Mar -> Apr 2023)
+snap_loss <- snap_county |>
+  filter(date %in% c(cut_date %m+% months(-1), cut_date), !name %in% c("WPHS", "MNPRAIRIE")) |>
+  mutate(month = ifelse(date == cut_date, "dollars_after", "dollars_before"), key = norm_name(name)) |>
+  select(key, month, dollars) |> pivot_wider(names_from = month, values_from = dollars)
+
+rural <- read_csv("data/public/rural_codes.csv", show_col_types = FALSE) |> mutate(fips = as.character(fips))
+
+by_place <- county_change |>
+  inner_join(snap_loss, by = "key") |>
+  inner_join(acs, by = "key") |>
+  left_join(rural, by = "fips") |>
+  mutate(snap_lost_per_resident = (dollars_before - dollars_after) / population,   # SNAP dollars lost per resident per month
+         loss_group = ifelse(snap_lost_per_resident >= median(snap_lost_per_resident), "Lost MORE SNAP per resident", "Lost LESS SNAP per resident"),
+         area = ifelse(metro, "Metro", "Rural"))
+
+nrow(by_place)                                  # counties compared (WPHS and MNPrairie counties have no separate SNAP figures)
+mean(by_place$visits_change > 0)                # share of counties where visits rose
+wm <- function(x, w) sum(x * w) / sum(w)        # weighted mean (weights = visits before the cut)
+
+# Does losing more SNAP per resident go with a bigger rise in visits?
+cor(by_place$snap_lost_per_resident, by_place$visits_change, method = "spearman")                   # every county counts once
+summary(lm(visits_change ~ snap_lost_per_resident, data = by_place))$coefficients                    # unweighted slope
+summary(lm(visits_change ~ snap_lost_per_resident, data = by_place, weights = before))$coefficients  # weighted by county size
+
+by_place |> group_by(loss_group) |> summarise(counties = n(), average = round(mean(visits_change), 1), weighted_average = round(wm(visits_change, before), 1))
+by_place |> group_by(area) |>
+  summarise(counties = n(), average = round(mean(visits_change), 1), weighted_average = round(wm(visits_change, before), 1),
+            spearman = round(cor(snap_lost_per_resident, visits_change, method = "spearman"), 2))
+by_place |> arrange(visits_change) |> select(key, before, after, visits_change, snap_lost_per_resident, area) |> slice(c(1:3, (n() - 2):n()))
+```
+
+```{r chunk6_chart}
+label_these <- by_place |> filter(before > 150000 | abs(visits_change - median(visits_change)) > 40)
+chart_place <- ggplot(by_place, aes(snap_lost_per_resident, visits_change, color = area)) +
+  geom_hline(yintercept = 0, color = "grey60") +
+  geom_hline(yintercept = wm(by_place$visits_change, by_place$before), linetype = "dashed", color = "grey40") +
+  geom_point(aes(size = before), alpha = 0.65) +
+  geom_smooth(aes(weight = before), method = "lm", se = FALSE, linewidth = 0.8) +
+  geom_text(data = label_these, aes(label = recode(tools::toTitleCase(tolower(key)), Mcleod = "McLeod", Lesueur = "Le Sueur")), size = 3, vjust = -1, show.legend = FALSE, check_overlap = TRUE) +
+  scale_size_area(max_size = 12, labels = scales::comma, name = "Visits in the\n12 months before") +
+  scale_color_manual(values = c(Metro = "#1f77b4", Rural = "#d95f02"), name = NULL) +
+  labs(title = "Counties that lost more SNAP did not see bigger rises in food shelf visits",
+       subtitle = "Each dot is a county: change in visits (12 months after vs. 12 months before the April 2023 cut)\nagainst SNAP dollars lost per resident per month. Dashed line = statewide average rise.\nLines are weighted by county size.",
+       x = "SNAP dollars lost per resident per month (Mar to Apr 2023)", y = "Change in food shelf visits (%)",
+       caption = "Sources: The Food Group (sites reporting all 24 months); MN DHS/DCYF SNAP reports; U.S. Census Bureau; USDA ERS") +
+  theme_minimal()
+chart_place
+ggsave("output/q5_chart5_by_county.png", chart_place, width = 9, height = 6, bg = "white")
+
+# Backup chart: every county, ranked
+chart_rank <- by_place |> mutate(label = tools::toTitleCase(tolower(key))) |>
+  ggplot(aes(reorder(label, visits_change), visits_change, fill = area)) + geom_col() + coord_flip() +
+  scale_fill_manual(values = c(Metro = "#1f77b4", Rural = "#d95f02"), name = NULL) +
+  geom_hline(yintercept = median(by_place$visits_change), linetype = "dashed") +
+  labs(title = "Change in food shelf visits by county", subtitle = "12 months after vs. 12 months before the April 2023 SNAP cut; dashed line = median county",
+       x = NULL, y = "Change in visits (%)") + theme_minimal(base_size = 7)
+ggsave("output/q5_chart6_county_ranked.png", chart_rank, width = 7, height = 10, bg = "white")
+```
+
+```{r chunk6_area}
+# Does the within-county link between SNAP caseload and visits (Chunk 4c) differ for metro and rural counties?
+pa <- panel |> inner_join(select(by_place, key, area), by = c("unit" = "key")) |>
+  mutate(across(c(visits, individuals, pounds, persons), log, .names = "l_{.col}"), unit = factor(unit), dt = factor(date))
+area_tbl <- map_dfr(c("Metro", "Rural"), function(a) {
+  d <- pa |> filter(area == a)
+  map_dfr(c("visits", "individuals", "pounds"), function(y) {
+    d$yy <- d[[paste0("l_", y)]]
+    m <- lm(yy ~ l_persons + unit + dt, data = d)
+    cl_coef(m, d$unit, "^l_persons$") |> mutate(area = a, measure = y, counties = n_distinct(d$unit), lo = estimate - 1.96 * se, hi = estimate + 1.96 * se)
+  })
+})
+area_tbl |> select(area, measure, counties, estimate, se, p, lo, hi) |> mutate(across(where(is.numeric), ~ round(.x, 3)))
+```
+
+# Chunk 7: Save everything
+
+```{r chunk7}
+write_xlsx(list(statewide_monthly = state, before_after = before_after, trend_before_after = trend_tbl,
+                oct_changes = oct_tbl, pulse_model = pulse_tbl, dose_response = did_tbl,
+                within_county = fe_tbl, snap_events = snap_events, counties_2024 = county_2024, by_place = by_place, metro_vs_rural = area_tbl),
+           "output/q5_results.xlsx")
+list.files("output")
+```

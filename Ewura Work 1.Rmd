@@ -1,0 +1,310 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r}
+library(readxl)
+excel_sheets("data/FeedingAmericaData/MMG2025_2019-2023_Data_To_Share_v2.xlsx")
+excel_sheets("data/FeedingAmericaData/MMG2026_2024_Data_To_Share.xlsx")
+file.exists("data/org_FSStats.xlsx")
+```
+
+```{r}
+library(readxl)
+library(dplyr)
+library(readr)
+
+# read every column as text so the two files stack without type clashes
+mmg25 <- read_excel("data/FeedingAmericaData/MMG2025_2019-2023_Data_To_Share_v2.xlsx",
+                    sheet = "County", col_types = "text")
+mmg26 <- read_excel("data/FeedingAmericaData/MMG2026_2024_Data_To_Share.xlsx",
+                    sheet = "County", col_types = "text")
+
+names(mmg25)[startsWith(names(mmg25), "% FI")] <- c("fi_below_snap", "fi_above_snap")
+names(mmg26)[startsWith(names(mmg26), "% FI")] <- c("fi_below_snap", "fi_above_snap")
+
+mmg_mn <- bind_rows(mmg25, mmg26) |>
+  filter(State == "MN", Year %in% c("2022", "2023", "2024")) |>
+  transmute(fips          = FIPS,
+            county        = sub(" County, Minnesota", "", `County, State`),
+            year          = as.numeric(Year),
+            fi_rate       = as.numeric(`Overall Food Insecurity Rate`),
+            fi_persons    = as.numeric(`# of Food Insecure Persons Overall`),
+            fi_below_snap = as.numeric(fi_below_snap),
+            fi_above_snap = as.numeric(fi_above_snap),
+            rucc_2023     = as.numeric(`Rural-Urban Continuum Code (2023)`))
+
+count(mmg_mn, year)
+head(mmg_mn)
+```
+
+```{r}
+table(mmg_mn$year)                 # each year should say 87
+all(startsWith(mmg_mn$fips, "27")) # should print TRUE
+range(mmg_mn$fi_rate)              # both numbers should be between 0 and 1
+sum(is.na(mmg_mn$fi_persons))      # should print 0
+```
+```{r}
+fs <- read_excel("data/org_FSStats.xlsx", guess_max = 30000)
+
+food_shelf_types <- c("Brick and Mortar Site", "Brick and Mortar Sites", "Food Shelf",
+                      "Mobile", "Outreach Program", "Tribal Program", "College Campus Program")
+
+fs_clean <- fs |>
+  mutate(date = as.Date(DateForSearch),
+         year = as.numeric(format(date, "%Y"))) |>
+  filter(year %in% 2022:2024,
+         AgencyType %in% food_shelf_types) |>
+  select(site        = `_id_site`,
+         date,
+         year,
+         county      = County,
+         visits      = HouseholdsReg,
+         pounds      = PoundsReg,
+         individuals = IndividualsReg) |>
+  distinct() |>
+  mutate(visits = ifelse(visits > 3 * individuals, NA, visits),
+         pounds = ifelse(pounds < 0, NA, pounds),
+         county = case_when(
+           county %in% c("Hennepin-Minneapolis", "Hennepin-Suburbs") ~ "Hennepin",
+           county %in% c("Ramsey-Saint Paul", "Ramsey-Suburbs")      ~ "Ramsey",
+           county == "Saint Louis"   ~ "St. Louis",
+           county == "Lac Qui Parle" ~ "Lac qui Parle",
+           TRUE ~ county))
+
+fs_county <- fs_clean |>
+  filter(!is.na(county)) |>
+  group_by(county, year) |>
+  summarise(visits      = sum(visits, na.rm = TRUE),
+            pounds      = sum(pounds, na.rm = TRUE),
+            individuals = sum(individuals, na.rm = TRUE),
+            n_sites     = n_distinct(site),
+            .groups = "drop")
+
+count(fs_county, year)
+```
+
+```{r}
+q1 <- mmg_mn |>
+  left_join(fs_county, by = c("county", "year")) |>
+  mutate(visits      = coalesce(visits, 0),
+         pounds      = coalesce(pounds, 0),
+         individuals = coalesce(individuals, 0),
+         n_sites     = coalesce(n_sites, 0),
+         population  = fi_persons / fi_rate)
+
+anti_join(fs_county, mmg_mn, by = c("county", "year"))   # should be EMPTY
+filter(q1, visits == 0)                                  # counties with no food shelf data
+```
+
+```{r}
+q1 |>
+  group_by(year) |>
+  summarise(visits      = cor(fi_rate, visits / population, method = "spearman"),
+            pounds      = cor(fi_rate, pounds / population, method = "spearman"),
+            individuals = cor(fi_rate, individuals / population, method = "spearman"))
+```
+
+```{r}
+q1 |>
+  group_by(year) |>
+  summarise(visits_totals = cor(fi_persons, visits, method = "spearman"),
+            visits_rates  = cor(fi_rate, visits / population, method = "spearman"))
+```
+
+```{r}
+state_rate <- q1 |>
+  group_by(year) |>
+  summarise(visits_per_fi      = sum(visits) / sum(fi_persons),
+            pounds_per_fi      = sum(pounds) / sum(fi_persons),
+            individuals_per_fi = sum(individuals) / sum(fi_persons))
+
+state_rate
+
+mismatch <- q1 |>
+  left_join(state_rate, by = "year") |>
+  mutate(visits_ratio      = visits / (fi_persons * visits_per_fi),
+         pounds_ratio      = pounds / (fi_persons * pounds_per_fi),
+         individuals_ratio = individuals / (fi_persons * individuals_per_fi)) |>
+  group_by(county, fips) |>
+  summarise(visits_ratio      = mean(visits_ratio),
+            pounds_ratio      = mean(pounds_ratio),
+            individuals_ratio = mean(individuals_ratio),
+            .groups = "drop") |>
+  arrange(visits_ratio)
+
+head(mismatch, 10)   # LESS activity than need suggests
+tail(mismatch, 10)   # MORE activity than need suggests
+```
+```{r}
+mismatch |>
+  left_join(distance, by = "fips") |>
+  select(county, visits_ratio, pounds_ratio, individuals_ratio, avg_dist_miles, share_over_10mi) |>
+  head(10)
+```
+
+
+```{r}
+library(tidycensus)
+
+# 1. Rural share of population (2020 Census)
+rural <- get_decennial(geography = "county", state = "MN", year = 2020,
+                       sumfile = "dhc", output = "wide",
+                       variables = c(total = "P2_001N", rural = "P2_003N")) |>
+  transmute(fips = GEOID, rural_share = rural / total)
+
+# 2. Where people live: population center of each neighborhood (block group)
+bg <- read_csv("https://www2.census.gov/geo/docs/reference/cenpop2020/blkgrp/CenPop2020_Mean_BG27.txt",
+               col_types = cols(.default = "c"))
+names(bg) <- toupper(gsub("\ufeff", "", names(bg)))
+bg <- bg |>
+  transmute(bg_id = paste0(STATEFP, COUNTYFP, TRACTCE, BLKGRPCE),
+            fips  = paste0(STATEFP, COUNTYFP),
+            pop   = as.numeric(POPULATION),
+            lat   = as.numeric(LATITUDE),
+            lon   = as.numeric(LONGITUDE))
+
+# 3. Where food shelves are: each site's neighborhood, from Organization.xlsx
+org <- read_excel("data/Organization.xlsx") |>
+  transmute(site  = `__ID`,
+            bg_id = substr(format(block_geoid, scientific = FALSE, trim = TRUE), 1, 12))
+
+sites <- fs_clean |>
+  distinct(site) |>
+  inner_join(org, by = "site") |>
+  inner_join(select(bg, bg_id, lat, lon), by = "bg_id")
+
+# 4. Miles to the nearest food shelf, for every neighborhood
+miles <- function(lat1, lon1, lat2, lon2) {
+  69 * sqrt((lat1 - lat2)^2 + ((lon1 - lon2) * cos(lat1 * pi / 180))^2)
+}
+bg$dist <- sapply(1:nrow(bg), function(i) min(miles(bg$lat[i], bg$lon[i], sites$lat, sites$lon)))
+
+# 5. County averages
+distance <- bg |>
+  group_by(fips) |>
+  summarise(avg_dist_miles  = weighted.mean(dist, pop),
+            share_over_10mi = sum(pop[dist > 10]) / sum(pop))
+
+nrow(sites)        # number of food shelves placed on the map (~450)
+summary(distance)  # average distance should be a few miles
+```
+```{r}
+distance |>
+  left_join(distinct(mmg_mn, fips, county), by = "fips") |>
+  arrange(desc(avg_dist_miles)) |>
+  head(10)
+```
+
+```{r}
+acs <- read_csv("data/public/acs_county.csv", show_col_types = FALSE) |>
+  group_by(fips = as.character(fips)) |>
+  summarise(poverty_rate    = mean(poverty_rate),
+            snap_hh_rate    = mean(snap_hh_rate),
+            no_vehicle_rate = mean(no_vehicle_rate),
+            med_income      = mean(med_income))
+
+county_info <- q1 |>
+  group_by(fips) |>
+  summarise(rucc_2023        = first(rucc_2023),
+            sites_per_10k_fi = mean(10000 * n_sites / fi_persons)) |>
+  left_join(acs, by = "fips") |>
+  left_join(rural, by = "fips") |>
+  left_join(distance, by = "fips")
+
+explain <- mismatch |> left_join(county_info, by = "fips")
+
+explain |>
+  summarise(poverty_rate     = cor(visits_ratio, poverty_rate,     method = "spearman", use = "complete.obs"),
+            snap_hh_rate     = cor(visits_ratio, snap_hh_rate,     method = "spearman", use = "complete.obs"),
+            no_vehicle_rate  = cor(visits_ratio, no_vehicle_rate,  method = "spearman", use = "complete.obs"),
+            rural_share      = cor(visits_ratio, rural_share,      method = "spearman", use = "complete.obs"),
+            avg_dist_miles   = cor(visits_ratio, avg_dist_miles,   method = "spearman", use = "complete.obs"),
+            share_over_10mi  = cor(visits_ratio, share_over_10mi,  method = "spearman", use = "complete.obs"),
+            sites_per_10k_fi = cor(visits_ratio, sites_per_10k_fi, method = "spearman", use = "complete.obs"),
+            med_income       = cor(visits_ratio, med_income,       method = "spearman", use = "complete.obs"))
+```
+
+```{r}
+#Is the distance link reliable?
+
+   cor.test(explain$visits_ratio, explain$avg_dist_miles, method = "spearman")
+```
+#The distance link is very reliable.
+
+How to read it:
+
+rho = −0.50: the correlation, the same number as before.
+p-value = 1.221e-06: this is scientific notation for 0.0000012. It's the chance of seeing a link this strong if there were really no relationship: about 1 in 800,000. The usual bar is 0.05, so this is far below it.
+
+What to say:
+
+"Distance to the nearest food shelf is strongly and reliably linked to the mismatch (Spearman ρ = −0.50, p < 0.001, 87 counties). The farther people live from a food shelf, the less food shelf use there is compared with need."
+
+One caution to state yourself, before a judge does: this shows the two go together, not that distance alone causes it. Far-away counties are also rural, and some may use food shelves outside the network or across the state line. But distance is the strongest link of everything you tested, which makes it the best lead for The Food Group.
+
+
+
+```{r}
+library(writexl)
+library(ggplot2)
+dir.create("output", showWarnings = FALSE)
+
+# 1. Save all Q1 tables to one Excel file (one tab each)
+write_xlsx(list(county_data = q1,
+                state_rate  = state_rate,
+                mismatch    = explain),
+           "output/q1_results.xlsx")
+
+# 2. Chart: need vs. visits by county, 2024
+ggplot(filter(q1, year == 2024, visits > 0), aes(x = fi_persons, y = visits)) +
+  geom_point(color = "steelblue") +
+  geom_smooth(method = "lm", se = FALSE, color = "grey40") +
+  scale_x_log10(labels = scales::comma) +
+  scale_y_log10(labels = scales::comma) +
+  labs(x = "Food-insecure people (Map the Meal Gap)",
+       y = "Food shelf visits",
+       title = "Need vs. food shelf visits by Minnesota county, 2024",
+       caption = "Sources: Feeding America, Map the Meal Gap; The Food Group") +
+  theme_minimal()
+ggsave("output/q1_chart1_need_vs_visits.png", width = 7, height = 5)
+
+# 3. Chart: the 10 least and 10 most served counties
+top_bottom <- bind_rows(head(mismatch, 10), tail(mismatch, 10)) |>
+  mutate(group = ifelse(visits_ratio < 1, "Less than need suggests", "More than need suggests"))
+
+ggplot(top_bottom, aes(x = reorder(county, visits_ratio), y = visits_ratio, fill = group)) +
+  geom_col() +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  coord_flip() +
+  scale_fill_manual(values = c("Less than need suggests" = "firebrick",
+                               "More than need suggests" = "steelblue")) +
+  labs(x = NULL,
+       y = "Visits compared with need (1 = state average)",
+       fill = NULL,
+       title = "Counties where food shelf visits and need disagree most",
+       subtitle = "Average of 2022-2024",
+       caption = "Sources: Feeding America, Map the Meal Gap; The Food Group") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+ggsave("output/q1_chart2_mismatch_counties.png", width = 7, height = 6)
+
+# 4. Chart: distance to nearest food shelf vs. visits compared with need
+ggplot(explain, aes(x = avg_dist_miles, y = visits_ratio)) +
+  geom_point(color = "steelblue") +
+  geom_smooth(method = "lm", se = FALSE, color = "grey40") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  geom_text(data = filter(explain, avg_dist_miles > 8 | visits_ratio > 2),
+            aes(label = county), size = 3, vjust = -0.7) +
+  labs(x = "Average miles to the nearest food shelf",
+       y = "Visits compared with need (1 = state average)",
+       title = "The farther from a food shelf, the less it is used",
+       subtitle = "Each dot is a Minnesota county, 2022-2024 (Spearman rho = -0.50, p < 0.001)",
+       caption = "Sources: Feeding America; The Food Group; U.S. Census Bureau") +
+  theme_minimal()
+ggsave("output/q1_chart3_distance.png", width = 7, height = 5)
+
+list.files("output")
+```
+

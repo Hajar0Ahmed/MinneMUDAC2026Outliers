@@ -1,3 +1,16 @@
+
+---
+output: github_document
+---
+
+```{r}
+library(readxl)
+library(dplyr)
+```
+
+Save (Ctrl+S), then click **Knit**. When it finishes, commit and push the new `.md` file and the image folder it creates.
+
+
 ```{r}
 library(readxl)
 library(dplyr)

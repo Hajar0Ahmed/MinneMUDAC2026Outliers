@@ -23,6 +23,8 @@ Required packages:
     pip install geopandas matplotlib pandas
 '''
 import os
+import numpy as np
+from scipy.stats import spearmanr
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -35,6 +37,24 @@ from spatial_analysis import (
     SHAPE_PATH, SHAPE_ID_COL, SCORE_COL, RETAIL_COL, SUMMARY_PATH,
     OUT_GISTAR, OUT_SPEARMAN, OUT_MORAN, OUT_QUADRAT, OUT_QUADRAT_SUMMARY,
 )
+
+
+OUT_REGIONAL = "data/processed/regional_breakdown.csv"
+
+REGION_COUNTIES = {
+    "Twin Cities Metro": ["003","019","037","053","123","139","163"],
+    "Northwest": ["069","089","107","113","119","125","135","007","029","057","077","087"],
+    "Northeast": ["001","017","031","061","071","075","137"],
+    "Central": ["021","035","097","153","159","009","141","145","171",
+                "025","059","065","095","115"],
+    "West Central": ["005","027","041","051","111","121","149","155","167"],
+    "Southwest": ["011","023","067","073","085","093","129","151","173",
+                  "033","063","081","083","101","105","117","127","133"],
+    "South Central": ["013","015","043","079","091","103","143","161","165"],
+    "Southeast": ["039","045","047","049","055","099","109","131","147","157","169"],
+}
+COUNTY_TO_REGION = {c: r for r, cs in REGION_COUNTIES.items() for c in cs}
+
 
 
 FIG_DIR = "visualizations"
@@ -62,12 +82,12 @@ QUADRAT_COLORS = {
 
 #---- Helper Functions ----#
 def load_shapes():
-    '''
-    Loads tract boundaries and renames ID column to GEO_ID.
-    '''
     shapes = gpd.read_file(SHAPE_PATH)
     shapes = shapes.rename(columns={SHAPE_ID_COL: "GEO_ID"})
     shapes["GEO_ID"] = shapes["GEO_ID"].astype(str)
+
+    # drop water-only tracts (Lake Superior, Red Lake, Lake of the Woods, etc.)
+    shapes = shapes[~shapes["GEO_ID"].str.endswith("990000")]
     return shapes[["GEO_ID", "geometry"]]
 
 
@@ -146,6 +166,7 @@ def generate_all_visuals():
     
     plot_tract_access_map(shapes)
     plot_retail_access_map(shapes)
+    build_regional_table()
     # 2. Run summary bar chart (combines all LILA definitions)
     plot_quadrat_bars()
     print(f"All figures saved to {FIG_DIR}/")
@@ -348,3 +369,74 @@ def plot_retail_access_map(shapes):
     fig.savefig(path, dpi=DPI, bbox_inches="tight")
     plt.close(fig)
     print(f"Saved retail access map to {path}")
+    
+    
+
+def build_regional_table(lila_col="LILATracts_1And10"):
+    '''
+    Region-level summary: shelf access, coldspot share, double-gap share,
+    retail/shelf correlation, and LILA vs non-LILA shelf access.
+    '''
+    df = pd.read_csv(OUT_QUADRAT, dtype={"GEO_ID": str})
+    gi = pd.read_csv(OUT_GISTAR, dtype={"GEO_ID": str})
+    gi = gi.loc[gi["group"] == "all", ["GEO_ID", "gi_class"]]
+    df = df.merge(gi, on="GEO_ID", how="left")
+
+    df["region"] = df["GEO_ID"].str[-11:].str[2:5].map(COUNTY_TO_REGION)
+    df = df.dropna(subset=["region", RETAIL_COL, SCORE_COL]).copy()
+
+    # statewide median cutoffs (same as the quadrat analysis)
+    r_cut, s_cut = df[RETAIL_COL].median(), df[SCORE_COL].median()
+    low_r, low_s = df[RETAIL_COL] < r_cut, df[SCORE_COL] < s_cut
+    df["double_gap"] = low_r & low_s
+    df["shelf_fills_gap"] = low_r & ~low_s
+    df["coldspot"] = df["gi_class"].eq("Coldspot")
+    df["is_lila"] = df["in_usda"].eq(True) & df[lila_col].eq(True)
+    df["is_nonlila"] = df["in_usda"].eq(True) & df[lila_col].eq(False)
+
+    rows = []
+    for region, g in df.groupby("region"):
+        lila, non = g[g["is_lila"]], g[g["is_nonlila"]]
+        rho = (spearmanr(g[RETAIL_COL], g[SCORE_COL])[0] if len(g) >= 15 else np.nan)
+        rows.append({
+            "region": region,
+            "n_tracts": len(g),
+            "median_shelf_access": g[SCORE_COL].median(),
+            "median_retail_access": g[RETAIL_COL].median(),
+            "pct_coldspot": 100 * g["coldspot"].mean(),
+            "pct_double_gap": 100 * g["double_gap"].mean(),
+            "pct_shelf_fills_gap": 100 * g["shelf_fills_gap"].mean(),
+            "spearman_rho": rho,
+            "n_lila": len(lila),
+            "lila_median_shelf": lila[SCORE_COL].median() if len(lila) else np.nan,
+            "nonlila_median_shelf": non[SCORE_COL].median() if len(non) else np.nan,
+            "pct_lila_double_gap": (100 * lila["double_gap"].mean()
+                                    if len(lila) else np.nan),
+        })
+
+    table = (pd.DataFrame(rows)
+             .sort_values("median_shelf_access", ascending=False)
+             .round(2))
+    table.to_csv(OUT_REGIONAL, index=False)
+    print(table.to_string(index=False))
+    plot_regional_bars(table)
+    return table
+
+
+def plot_regional_bars(table):
+    '''Slide-friendly chart: coldspot share and double-gap share by region.'''
+    t = table.sort_values("pct_double_gap")
+    fig, ax = plt.subplots(figsize=(8, 5))
+    y = np.arange(len(t))
+    ax.barh(y + 0.2, t["pct_double_gap"], height=0.4,
+            color="#c6dbef", label="Low retail & low shelf access (%)")
+    ax.barh(y - 0.2, t["pct_coldspot"], height=0.4,
+            color="#2166ac", label="Shelf-access coldspot (%)")
+    ax.set_yticks(y)
+    ax.set_yticklabels(t["region"])
+    ax.set_xlabel("Share of tracts in region (%)")
+    ax.set_title("Where shelf access falls short, by region")
+    ax.legend(fontsize=8, loc="lower right")
+    fig.savefig(os.path.join(FIG_DIR, "regional_breakdown.png"),
+                dpi=DPI, bbox_inches="tight")
+    plt.close(fig)

@@ -1,0 +1,528 @@
+GEO_ID,City,Zip,County,AgencyType,_id_site,capacity,capacity_source,capacity_year,is_zip_centroid
+27003050505,Anoka,55303,Hennepin-Suburbs,Brick and Mortar Site,1066,6224.0,reported,2024.0,0
+27145010402,Albany,56307,Stearns,Brick and Mortar Site,1067,78.75,reported,2024.0,0
+27053109900,Minneapolis,55409,Hennepin-Minneapolis,Brick and Mortar Site,1069,524.3636363636364,reported,2024.0,0
+27009020203,Rice,56367,Benton,Brick and Mortar Site,1070,102.75,reported,2024.0,0
+27171100402,Annandale,55302,Wright,Brick and Mortar Site,1071,703.75,reported,2024.0,0
+27137013800,Aurora,55705,St. Louis,Brick and Mortar Site,1072,393.0,reported,2024.0,0
+27111961200,Battle Lake,56515,Otter Tail,Brick and Mortar Site,1073,177.83333333333334,reported,2024.0,0
+27005450500,Detroit Lakes,56501,Becker,Brick and Mortar Site,1074,1736.75,reported,2024.0,0
+27007450600,Bemidji,56601,Beltrami,Brick and Mortar Site,1075,3487.25,reported,2024.0,0
+27011950300,Ortonville,56278,Big Stone,Brick and Mortar Site,1076,270.5,reported,2024.0,0
+27145010900,Brooten,56312,Stearns,Brick and Mortar Site,1079,185.5,reported,2024.0,0
+27155460200,Browns Valley,56219,Traverse,Brick and Mortar Site,1080,74.33333333333333,reported,2024.0,0
+27171100704,Buffalo,55313,Wright,Brick and Mortar Site,1081,1858.8333333333333,reported,2024.0,0
+27037060737,Burnsville,55337,Dakota,Brick and Mortar Site,1082,1638.9166666666667,reported,2024.0,0
+27053020304,Brooklyn Center,55429,Hennepin-Suburbs,Brick and Mortar Site,1083,1025.1666666666667,reported,2024.0,0
+27053020302,Brooklyn Center,55429,Hennepin-Suburbs,Brick and Mortar Site,1086,4840.0,reported,2024.0,0
+27053106000,Minneapolis,55404,Hennepin-Minneapolis,Brick and Mortar Site,1087,2895.1666666666665,reported,2024.0,0
+27137001900,Duluth,55802,St. Louis,Brick and Mortar Site,1088,1348.9166666666667,reported,2024.0,0
+27053026911,Rogers,55374,Hennepin-Suburbs,Brick and Mortar Site,1089,5530.166666666667,reported,2024.0,0
+27009020100,Foley,56329,Benton,Brick and Mortar Site,1090,1122.0833333333333,reported,2024.0,0
+27053009600,Minneapolis,55407,Hennepin-Minneapolis,Brick and Mortar Site,1091,3242.0,reported,2024.0,0
+27173970200,Canby,56220,Yellow Medicine,Brick and Mortar Site,1092,74.5,reported,2024.0,0
+27145000601,St. Cloud,56301,Stearns,Brick and Mortar Site,1095,7460.416666666667,reported,2024.0,0
+27021940002,Cass Lake,56633,Cass,Brick and Mortar Site,1096,979.3333333333334,reported,2024.0,0
+27053104801,Minneapolis,55454,Hennepin-Minneapolis,Brick and Mortar Site,1097,1268.6666666666667,reported,2024.0,0
+27003050902,Circle Pines,55014,Anoka,Brick and Mortar Site,1098,1491.5833333333333,reported,2024.0,0
+27109000903,Rochester,55904,Olmsted,Brick and Mortar Site,1100,27515.833333333332,reported,2024.0,0
+27109002000,Chatfield,55923,Olmsted,Brick and Mortar Site,1101,161.16666666666666,reported,2024.0,0
+27023950602,Montevideo,56265,Chippewa,Brick and Mortar Site,1102,689.3333333333334,reported,2024.0,0
+27137012600,Chisholm,55719,St. Louis,Brick and Mortar Site,1103,338.9166666666667,reported,2024.0,0
+27163070910,Oakdale,55128,Washington,Brick and Mortar Site,1104,71514.5,reported,2024.0,0
+27105105400,Worthington,56187,Nobles,Brick and Mortar Site,1106,751.6666666666666,reported,2024.0,0
+27137015200,Cook,55723,St. Louis,Brick and Mortar Site,1108,146.58333333333334,reported,2024.0,0
+27029000100,Bagley,56621,Clearwater,Brick and Mortar Site,1109,497.5833333333333,reported,2024.0,0
+27017070100,Cloquet,55720,Carlton,Brick and Mortar Site,1110,418.4166666666667,reported,2024.0,0
+27073180100,Madison,56256,Lac Qui Parle,Brick and Mortar Site,1111,100.33333333333333,reported,2024.0,0
+27125010200,Red Lake Falls,56750,Red Lake,Brick and Mortar Site,1112,115.0,reported,2024.0,0
+27123033400,St. Paul,55104,Ramsey-Saint Paul,College Campus Program ,1113,93.66666666666667,reported,2024.0,0
+27035950204,Crosslake,56442,Crow Wing,Brick and Mortar Site,1116,375.0,reported,2024.0,0
+27035950701,Crosby,56441,Crow Wing,Brick and Mortar Site,1117,348.1666666666667,reported,2024.0,0
+27061480302,Deer River,56636,Itasca,Brick and Mortar Site,1118,247.91666666666666,reported,2024.0,0
+27171101002,Delano,55328,Wright,Brick and Mortar Site,1119,360.25,reported,2024.0,0
+27123042102,Little Canada,55117,Ramsey-Suburbs,Brick and Mortar Site,1120,1460.8333333333333,reported,2024.0,0
+27053008500,Minneapolis,55407,Hennepin-Minneapolis,Tribal Program,1122,631.9166666666666,reported,2024.0,0
+27013170700,Mankato,56001,Blue Earth,Brick and Mortar Site,1124,10434.166666666666,reported,2024.0,0
+27047180800,Albert Lea,56007,Freeborn,Brick and Mortar Site,1126,393.0833333333333,reported,2024.0,0
+27093560500,Eden Valley,55329,Stearns,Brick and Mortar Site,1127,72.08333333333333,reported,2024.0,0
+27075370400,Two Harbors,55616,Lake,Brick and Mortar Site,1128,74.66666666666667,reported,2024.0,0
+27035950100,Emily,56447,Crow Wing,Brick and Mortar Site,1131,344.0833333333333,reported,2024.0,0
+27017070501,Moose Lake,55767,Carlton,Brick and Mortar Site,1135,338.25,reported,2024.0,0
+27071790202,International Falls,56649,Koochiching,Brick and Mortar Site,1137,581.4166666666666,reported,2024.0,0
+27025110504,Chisago City,55013,Chisago,Brick and Mortar Site,1138,768.0,reported,2024.0,0
+27111960900,Fergus Falls,56537,Otter Tail,Brick and Mortar Site,1141,688.6666666666666,reported,2024.0,0
+27119020800,Fertile,56540,Polk,Brick and Mortar Site,1142,73.25,reported,2024.0,0
+27049080600,Cannon Falls,55009,Goodhue,Brick and Mortar Site,1143,257.75,reported,2024.0,0
+27021960803,Pillager,56473,Cass,Brick and Mortar Site,1144,198.33333333333334,reported,2024.0,0
+27137011200,Floodwood,55736,St. Louis,Brick and Mortar Site,1145,119.08333333333333,reported,2024.0,0
+27163071300,St Paul Park,55071,Washington,Brick and Mortar Site,1146,3984.6666666666665,reported,2024.0,0
+27119020900,Erskine,56535,Polk,Brick and Mortar Site,1148,104.58333333333333,reported,2024.0,0
+27031480200,Grand Marais,55604,Cook,Brick and Mortar Site,1149,198.75,reported,2024.0,0
+27061480803,Grand Rapids,55744,Itasca,Brick and Mortar Site,1150,2942.9166666666665,reported,2024.0,0
+27051070100,Elbow Lake,56531,Grant,Brick and Mortar Site,1151,119.58333333333333,reported,2024.0,0
+27053105600,Minneapolis,55403,Hennepin-Minneapolis,Brick and Mortar Site,1154,5519.0,reported,2024.0,0
+27089080100,Grygla,56727,Marshall,Brick and Mortar Site,1155,26.5,reported,2024.0,0
+27123033900,St. Paul,55102,Ramsey-Saint Paul,Brick and Mortar Site,1156,1792.1666666666667,reported,2024.0,0
+27087940100,Mahnomen,56557,Mahnomen,Brick and Mortar Site,1159,195.08333333333334,reported,2024.0,0
+27111961300,Henning,56551,Otter Tail,Brick and Mortar Site,1160,129.25,reported,2024.0,0
+27001770200,Hill City,55748,Aitkin,Brick and Mortar Site,1162,137.33333333333334,reported,2024.0,0
+27057070600,Park Rapids,56470,Hubbard,Brick and Mortar Site,1163,1280.4166666666667,reported,2024.0,0
+27053026103,Minnetonka,55343,Hennepin-Suburbs,Brick and Mortar Site,1164,4678.0,reported,2024.0,0
+27107960200,Hendrum,56550,Norman,Brick and Mortar Site,1165,27.181818181818183,reported,2024.0,0
+27125010100,Oklee,56742,Red Lake,Brick and Mortar Site,1166,100.41666666666667,reported,2024.0,0
+27053026606,Plymouth,55447,Hennepin-Suburbs,Brick and Mortar Site,1167,1392.0,reported,2024.0,0
+27095970100,Isle,56342,Mille Lacs,Brick and Mortar Site,1168,166.41666666666666,reported,2024.0,0
+27053008100,Minneapolis,55408,Hennepin-Minneapolis,Brick and Mortar Site,1169,5178.083333333333,reported,2024.0,0
+27145011201,Kimball,55353,Stearns,Brick and Mortar Site,1170,186.58333333333334,reported,2024.0,0
+27157490300,Lake City,55041,Wabasha,Brick and Mortar Site,1171,643.8333333333334,reported,2024.0,0
+27077460300,Baudette,56623,Lake of the Woods,Brick and Mortar Site,1172,158.25,reported,2024.0,0
+27035950401,Pequot Lakes,56472,Crow Wing,Brick and Mortar Site,1173,1598.75,reported,2024.0,0
+27079950500,Le Center,56057,Le Sueur,Brick and Mortar Site,1174,237.91666666666666,reported,2024.0,0
+27119021000,Fosston,56542,Polk,Brick and Mortar Site,1177,289.1666666666667,reported,2024.0,0
+27153790600,Long Prairie,56347,Todd,Brick and Mortar Site,1178,719.8333333333334,reported,2024.0,0
+27001770402,McGregor,55760,Aitkin,Brick and Mortar Site,1180,241.41666666666666,reported_other_year,2023.0,0
+27085950700,Glencoe,55336,McLeod,Brick and Mortar Site,1181,966.5,reported,2024.0,0
+27093560400,Litchfield,55355,Meeker,Brick and Mortar Site,1182,1117.25,reported,2024.0,0
+27159480100,Menahga,56464,Wadena,Brick and Mortar Site,1183,115.83333333333333,reported,2024.0,0
+27095170500,Milaca,56353,Mille Lacs,Brick and Mortar Site,1186,803.1666666666666,reported,2024.0,0
+27053026807,Brooklyn Park,55428,Wright,Brick and Mortar Site,1188,2562.75,reported,2024.0,0
+27065480300,Mora,55051,Kanabec,Brick and Mortar Site,1189,705.3846153846154,reported,2024.0,0
+27097780700,Little Falls,56345,Morrison,Brick and Mortar Site,1190,979.6666666666666,reported,2024.0,0
+27097780100,Motley,56466,Morrison,Brick and Mortar Site,1191,266.4166666666667,reported,2024.0,0
+27053027602,Mound,55364,Hennepin-Suburbs,Brick and Mortar Site,1192,5493.833333333333,reported,2024.0,0
+27101900300,Slayton,56172,Murray,Brick and Mortar Site,1193,303.4166666666667,reported,2024.0,0
+27053001100,Minneapolis,55418,Hennepin-Minneapolis,Brick and Mortar Site,1195,481.9166666666667,reported,2024.0,0
+27123036100,St. Paul,55107,Ramsey-Saint Paul,Brick and Mortar Site,1196,3350.9166666666665,reported,2024.0,0
+27161790500,Waseca,56093,Waseca,Brick and Mortar Site,1197,886.25,reported,2024.0,0
+27037060301,St. Paul,55075,Dakota,Brick and Mortar Site,1199,5163.75,reported,2024.0,0
+27015960102,New Ulm,56073,Brown,Brick and Mortar Site,1200,340.25,reported,2024.0,0
+27111960600,New York Mills,56567,Otter Tail,Brick and Mortar Site,1201,121.58333333333333,reported,2024.0,0
+27003050110,Bethel,55011,Anoka,Brick and Mortar Site,1202,2717.8333333333335,reported,2024.0,0
+27061480101,Bogfork,56628,Itasca,Brick and Mortar Site,1203,105.83333333333333,reported,2024.0,0
+27131070503,Northfield,55057,Rice,Brick and Mortar Site,1207,4284.166666666667,reported,2024.0,0
+27061480803,Grand Rapids,55744,Koochiching,Brick and Mortar Site,1208,63.833333333333336,reported,2024.0,0
+27041450602,Alexandria,56308,Douglas,Brick and Mortar Site,1210,1337.3333333333333,reported,2024.0,0
+27053021602,Golden Valley,55422,Hennepin-Suburbs,Brick and Mortar Site,1211,4767.833333333333,reported,2024.0,0
+27053026006,Eden Prairie,55344,Hennepin-Suburbs,Brick and Mortar Site,1212,1915.5,reported,2024.0,0
+27145011000,Paynesville,56362,Stearns,Brick and Mortar Site,1214,426.1818181818182,reported,2024.0,0
+27111960300,Pelican Rapids,56572,Otter Tail,Brick and Mortar Site,1215,469.0833333333333,reported,2024.0,0
+27111960500,Perham,56573,Otter Tail,Brick and Mortar Site,1216,1026.6666666666667,reported,2024.0,0
+27097780500,Pierz,56364,Morrison,Brick and Mortar Site,1217,313.4166666666667,reported,2024.0,0
+27137003700,Duluth,55808,St. Louis,Brick and Mortar Site,1218,4211.916666666667,reported,2024.0,0
+27053002700,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,1219,4145.75,reported,2024.0,0
+27049080800,Pine Island,55963,Goodhue,Brick and Mortar Site,1220,351.9166666666667,reported,2024.0,0
+27021960700,Pine River,56474,Cass,Brick and Mortar Site,1221,496.9166666666667,reported,2024.0,0
+27117460300,Pipestone,56164,Pipestone,Brick and Mortar Site,1223,1315.25,reported,2024.0,0
+27121970400,Glenwood,56334,Pope,Brick and Mortar Site,1224,160.75,reported,2024.0,0
+27137010100,Proctor,55810,St. Louis,Brick and Mortar Site,1226,220.91666666666666,reported,2024.0,0
+27159480300,Wadena,56482,Wadena,Brick and Mortar Site,1227,236.83333333333334,reported,2024.0,0
+27137012800,Mountain Iron,55768,St. Louis,Brick and Mortar Site,1228,2531.4166666666665,reported,2024.0,0
+27123041105,New Brighton,55112,Ramsey-Suburbs,Brick and Mortar Site,1229,3180.25,reported,2024.0,0
+27049080201,Red Wing,55066,Goodhue,Brick and Mortar Site,1230,1985.75,reported,2024.0,0
+27127750200,Redwood Falls,56283,Redwood,Brick and Mortar Site,1231,357.9166666666667,reported,2024.0,0
+27021960100,Remer,56672,Cass,Brick and Mortar Site,1232,126.08333333333333,reported,2024.0,0
+27129790500,Olivia,56277,Renville,Brick and Mortar Site,1233,726.8333333333334,reported,2024.0,0
+27133570300,Luverne,56156,Rock,Brick and Mortar Site,1235,540.5833333333334,reported,2024.0,0
+27135970300,Roseau,56751,Roseau,Brick and Mortar Site,1236,390.8333333333333,reported,2024.0,0
+27003051400,Columbia Heights,55421,Anoka,Brick and Mortar Site,1237,5295.75,reported,2024.0,0
+27039950500,Kasson,55944,Dodge,Brick and Mortar Site,1238,785.0,reported,2024.0,0
+27055020500,Caledonia,55921,Houston,Brick and Mortar Site,1239,421.75,reported,2024.0,0
+27045960400,Preston,55965,Fillmore,Brick and Mortar Site,1240,362.0833333333333,reported,2024.0,0
+27045960100,Rushford,55971,Fillmore,Brick and Mortar Site,1241,237.16666666666666,reported,2024.0,0
+27015960500,Sleepy Eye,56085,Brown,Brick and Mortar Site,1242,94.91666666666667,reported,2024.0,0
+27053122600,St. Louis Park,55426,Hennepin-Suburbs,Brick and Mortar Site,1243,1413.5833333333333,reported,2024.0,0
+27053109400,Minneapolis,55409,Hennepin-Minneapolis,Brick and Mortar Site,1244,4440.583333333333,reported,2024.0,0
+27119020100,Grand Forks,56721,Polk,Brick and Mortar Site,1245,666.0909090909091,reported,2024.0,0
+27047180800,Albert Lea,56007,Freeborn,Brick and Mortar Site,1246,520.4166666666666,reported,2024.0,0
+27099000410,Austin,55912,Mower,Brick and Mortar Site,1247,2091.5,reported,2024.0,0
+27137015600,Duluth,55806,St. Louis,Brick and Mortar Site,1250,265.0,reported,2024.0,0
+27123031000,St. Paul,55130,Ramsey-Saint Paul,Brick and Mortar Site,1251,993.3333333333334,reported,2024.0,0
+27111961000,Fergus Falls,56537,Otter Tail,Brick and Mortar Site,1253,76.58333333333333,reported,2024.0,0
+27137012200,Hibbing,55746,St. Louis,Brick and Mortar Site,1254,1194.5,reported,2024.0,0
+27071790202,International Falls,56649,Koochiching,Brick and Mortar Site,1255,12.5,reported,2024.0,0
+27123041302,Roseville,55113,Hennepin-Minneapolis,Brick and Mortar Site,1256,501.0,reported,2024.0,0
+27053125900,Roseville,55113,Hennepin-Minneapolis,Brick and Mortar Site,1257,593.0,reported,2024.0,0
+27009021102,St. Cloud,56304,Stearns,Brick and Mortar Site,1258,1642.8333333333333,reported,2024.0,0
+27137013200,Virginia,55792,St. Louis,Brick and Mortar Site,1259,116.4,reported,2024.0,0
+27123035900,St. Paul,55102,Ramsey-Saint Paul,Brick and Mortar Site,1260,4071.1666666666665,reported,2024.0,0
+27139080400,Shakopee,55379,Hennepin-Suburbs,Brick and Mortar Site,1261,4093.25,reported,2024.0,0
+27159480200,Sebeka,56477,Wadena,Brick and Mortar Site,1262,87.0,reported,2024.0,0
+27053101900,Minneapolis,55413,Hennepin-Minneapolis,Brick and Mortar Site,1263,471.25,reported,2024.0,0
+27143170300,Gaylord,55334,Sibley,Brick and Mortar Site,1265,625.6666666666666,reported,2024.0,0
+27137015200,Virginia,55792,Lake,Brick and Mortar Site,1266,91.25,reported,2024.0,1
+27053007801,Minneapolis,55408,Hennepin-Minneapolis,Brick and Mortar Site,1267,1359.3333333333333,reported,2024.0,0
+27169671000,St. Charles,55972,Winona,Brick and Mortar Site,1269,287.5833333333333,reported,2024.0,0
+27163070603,Stillwater,55082,Washington,Brick and Mortar Site,1270,10830.833333333334,reported,2024.0,0
+27103480400,Peter,56082,Nicollet,Brick and Mortar Site,1275,788.9166666666666,reported,2024.0,0
+27089080300,Argyle,56713,Marshall,Brick and Mortar Site,1277,52.75,reported,2024.0,0
+27153790100,Staples,56479,Todd,Brick and Mortar Site,1278,261.5,reported,2024.0,0
+27147960600,Owatonna,55060,Steele,Brick and Mortar Site,1279,14374.083333333334,reported,2024.0,0
+27149480200,Morris,56267,Stevens,Brick and Mortar Site,1280,441.0,reported,2024.0,0
+27089080200,Strandquist,56758,Marshall,Brick and Mortar Site,1281,121.16666666666667,reported,2024.0,0
+27151960200,Benson,56215,Swift,Brick and Mortar Site,1282,427.5,reported,2024.0,0
+27053125600,Minneapolis,55414,Hennepin-Minneapolis,Brick and Mortar Site,1283,820.75,reported,2024.0,0
+27137015502,Tower,55790,St. Louis,Brick and Mortar Site,1284,110.25,reported,2024.0,1
+27083360700,Tracy,56175,Lyon,Brick and Mortar Site,1285,132.0,reported,2024.0,0
+27075370400,Two Harbors,55616,Lake,Brick and Mortar Site,1286,503.8333333333333,reported,2024.0,0
+27053125500,Bloomington,55420,Hennepin-Suburbs,Brick and Mortar Site,1289,15446.833333333334,reported,2024.0,0
+27107960300,Ada,56510,Norman,Brick and Mortar Site,1290,124.5,reported,2024.0,0
+27127750400,Wabasso,56293,Redwood,Brick and Mortar Site,1291,64.83333333333333,reported,2024.0,0
+27157490100,Wabasha,55981,Wabasha,Brick and Mortar Site,1293,1191.9166666666667,reported,2024.0,0
+27021940001,Walker,56484,Cass,Brick and Mortar Site,1294,1228.8333333333333,reported,2024.0,0
+27089080400,Warren,56762,Marshall,Brick and Mortar Site,1297,122.33333333333333,reported,2024.0,0
+27135970100,Warroad,56763,Roseau,Brick and Mortar Site,1298,176.5,reported,2024.0,0
+27165950200,Saint James,56081,Watonwan,Brick and Mortar Site,1299,1788.25,reported,2024.0,0
+27043460600,Wells,56097,Faribault,Brick and Mortar Site,1300,239.5,reported,2024.0,0
+27145011500,Sauk Centre,56378,Stearns,Brick and Mortar Site,1301,298.8333333333333,reported,2024.0,0
+27123040503,White Bear Lake,55110,Ramsey-Suburbs,Brick and Mortar Site,1304,12057.333333333334,reported,2024.0,0
+27067780800,Willmar,56201,Kandiyohi,Brick and Mortar Site,1305,2063.6666666666665,reported,2024.0,0
+27169670600,Winona,55987,Winona,Brick and Mortar Site,1306,2586.0,reported,2024.0,0
+27171101101,Waverly,55390,Wright,Brick and Mortar Site,1307,554.4166666666666,reported,2024.0,0
+27049080900,Zumbrota,55992,Goodhue,Brick and Mortar Site,1309,561.6666666666666,reported,2024.0,0
+27113090500,Thief River Falls,56701,Pennington,Brick and Mortar Site,1312,974.6666666666666,reported,2024.0,0
+27021960200,Lonville,56655,Cass,Brick and Mortar Site,1314,486.5833333333333,reported,2024.0,0
+27127750100,Morgan,56266,Redwood,Brick and Mortar Site,1315,565.0833333333334,reported,2024.0,0
+27153790400,Browerville,56438,Todd,Brick and Mortar Site,1316,149.83333333333334,reported,2024.0,0
+27053109900,Minneapolis,55409,Hennepin-Minneapolis,Brick and Mortar Site,1318,17527.5,reported,2024.0,0
+27109000100,Rochester,55906,Olmsted,Brick and Mortar Site,1322,774.25,reported,2024.0,0
+27141030409,Big Lake,55309,Sherburne,Brick and Mortar Site,1324,3009.9166666666665,reported,2024.0,0
+27141030504,Elk River,55330,Sherburne,Brick and Mortar Site,1325,2839.9166666666665,reported,2024.0,0
+27123036700,St. Paul,55116,Ramsey-Saint Paul,Brick and Mortar Site,1328,1146.9166666666667,reported,2024.0,0
+27115950402,Sandstone,55072,Pine,Brick and Mortar Site,1331,947.5,reported,2024.0,0
+27099001300,LeRoy,55951,Mower,Brick and Mortar Site,1333,111.58333333333333,reported,2024.0,0
+27083360200,Marshall,56258,Lyon,Brick and Mortar Site,1346,1199.6666666666667,reported,2024.0,0
+27079950300,Montgomery,56069,Le Sueur,Brick and Mortar Site,1347,380.5,reported,2024.0,0
+27033270100,Mountain Lake,56159,Cottonwood,Brick and Mortar Site,1348,369.5833333333333,reported,2024.0,0
+27139081200,New Prague,56071,Scott,Brick and Mortar Site,1351,628.9166666666666,reported,2024.0,0
+27027020300,Moorhead,56560,Clay,Brick and Mortar Site,1358,2099.1666666666665,reported,2024.0,0
+27053106000,Minneapolis,55404,Hennepin-Minneapolis,Brick and Mortar Site,1362,1702.6666666666667,reported,2024.0,0
+27141030407,Becker,55308,Sherburne,Brick and Mortar Site,1364,188.7,reported,2024.0,0
+27065480200,Ogilvie,56358,Kanabec,Brick and Mortar Site,1365,165.63636363636363,reported,2024.0,0
+27145010500,Melrose,56352,Stearns,Brick and Mortar Site,1371,419.8333333333333,reported,2024.0,0
+27059130200,Braham,55006,Isanti,Brick and Mortar Site,1372,251.91666666666666,reported,2024.0,0
+27123040603,Vadnais Heights,55127,Ramsey-Suburbs,Brick and Mortar Site,1376,157.83333333333334,reported,2024.0,0
+27095970200,Onamia,56359,Mille Lacs,Brick and Mortar Site,1384,481.0,reported,2024.0,0
+27025110302,North Branch,55056,Chisago,Brick and Mortar Site,1392,736.4166666666666,reported,2024.0,0
+27001770100,Jacobson,55752,Aitkin,Brick and Mortar Site,1407,49.333333333333336,reported,2024.0,0
+27137000400,Duluth,55811,St. Louis,Brick and Mortar Site,1410,1974.3333333333333,reported,2024.0,0
+27001770300,Aitkin,56431,Aitkin,Brick and Mortar Site,1411,338.4166666666667,reported,2024.0,0
+27157490500,Elgin,55932,Wabasha,Brick and Mortar Site,1412,381.1666666666667,reported,2024.0,0
+27137015300,Ely,55731,St. Louis,Brick and Mortar Site,1413,459.75,reported,2024.0,0
+27057070400,Akeley,56433,Hubbard,Brick and Mortar Site,1417,180.83333333333334,reported,2024.0,0
+27119020500,Climax,56523,Polk,Brick and Mortar Site,1421,208.08333333333334,reported,2024.0,0
+27047180300,Alden,56009,Freeborn,Brick and Mortar Site,1423,263.8333333333333,reported,2024.0,0
+27027030201,Hawley,56549,Clay,Brick and Mortar Site,11284,180.25,reported,2024.0,0
+27017070600,Cromwell,55726,Carlton,Brick and Mortar Site,13624,159.0,reported,2024.0,0
+27019090303,Waconia,55387,Carver,Brick and Mortar Site,13626,1555.3333333333333,reported,2024.0,0
+27173970100,Granite Falls,56241,Yellow Medicine,Brick and Mortar Site,13627,371.75,reported,2024.0,0
+27059130304,Cambridge,55008,Isanti,Brick and Mortar Site,13631,3351.3333333333335,reported,2024.0,0
+27025110202,Rush City,55069,Chisago,Brick and Mortar Site,13633,147.16666666666666,reported,2024.0,0
+27163070104,Forest Lake,55025,Washington,Brick and Mortar Site,13638,1183.3333333333333,reported,2024.0,0
+27109000903,Rochester,55904,Mower,Brick and Mortar Site,13640,148.33333333333334,reported,2024.0,0
+27053011998,Minneapolis,55417,Hennepin-Minneapolis,Brick and Mortar Site,13744,5008.25,reported,2024.0,0
+27163070304,Mahtomedi,55115,Washington,Brick and Mortar Site,13745,315.75,reported,2024.0,0
+27171100300,Clearwater,55320,Wright,Brick and Mortar Site,13828,334.75,reported,2024.0,0
+27079950200,Le Sueur,56058,Le Sueur,Brick and Mortar Site,13832,420.0,reported,2024.0,0
+27085950402,Hutchinson,55350,McLeod,Brick and Mortar Site,13836,1816.1818181818182,reported,2024.0,0
+27035951600,Garrison,56450,Crow Wing,Brick and Mortar Site,13837,383.0833333333333,reported,2024.0,0
+27037060904,Farmington,55024,Dakota,Brick and Mortar Site,13857,542.9166666666666,reported,2024.0,0
+27099001400,Meadow,55936,Mower,Brick and Mortar Site,13873,130.83333333333334,reported,2024.0,0
+27019091201,Young America,55397,Carver,Brick and Mortar Site,13879,242.83333333333334,reported,2024.0,0
+27027030107,Felton,56536,Clay,Brick and Mortar Site,13981,49.333333333333336,reported,2024.0,0
+27045960300,Spring Valley,55975,Fillmore,Brick and Mortar Site,14004,205.83333333333334,reported,2024.0,0
+27037060717,Eagan,55121,Dakota,Brick and Mortar Site,14005,8491.75,reported,2024.0,0
+27019090801,Chaska,55318,Carver,Brick and Mortar Site,14010,4443.083333333333,reported,2024.0,0
+27055020200,Hokah,55941,Houston,Brick and Mortar Site,14029,29.0,reported,2024.0,0
+27053126201,Minneapolis,55403,Hennepin-Minneapolis,Brick and Mortar Site,14032,67.5,reported,2024.0,0
+27053025205,Bloomington,55425,Hennepin-Suburbs,Brick and Mortar Site,14035,1787.3333333333333,reported,2024.0,0
+27053104902,Minneapolis,55414,Hennepin-Minneapolis,Brick and Mortar Site,14043,1384.8333333333333,reported,2024.0,0
+27161790200,New Richland,56072,Waseca,Brick and Mortar Site,14048,219.75,reported,2024.0,0
+27147960800,Ellendale,56026,Steele,Brick and Mortar Site,14053,368.4166666666667,reported,2024.0,0
+27155460100,Wheaton,56296,Traverse,Brick and Mortar Site,14055,78.25,reported,2024.0,0
+27007940001,Redby,56670,Beltrami,Tribal Program,14056,875.5,reported_other_year,2023.0,0
+27145010401,Avon,56310,Stearns,Brick and Mortar Site,14059,78.75,reported,2024.0,0
+27131070901,Faribault,55021,Rice,Brick and Mortar Site,14072,2641.9166666666665,reported,2024.0,0
+27053000102,Minneapolis,55412,Hennepin-Minneapolis,Brick and Mortar Site,14080,10603.583333333334,reported,2024.0,0
+27163070208,Hugo,55038,Washington,Brick and Mortar Site,14082,330.6666666666667,reported,2024.0,0
+27139080801,Jordan,55352,Scott,Brick and Mortar Site,14083,370.6666666666667,reported,2024.0,0
+27091790600,Fairmont,56031,Martin,Brick and Mortar Site,14087,249.83333333333334,reported,2024.0,0
+27161790100,Janesville,56048,Waseca,Brick and Mortar Site,14091,181.0,reported,2024.0,0
+27003050826,Blaine,55434,Anoka,Outreach Program,14094,14402.5,reported,2024.0,0
+27051070200,Hoffman,56339,Grant,Brick and Mortar Site,14106,80.16666666666667,reported,2024.0,0
+27021960600,Hackensack,56452,Cass,Brick and Mortar Site,14108,57.166666666666664,reported,2024.0,0
+27061480500,Nashwauk,55769,Itasca,Brick and Mortar Site,14109,157.84615384615384,reported,2024.0,0
+27045960600,Mabel,55954,Fillmore,Brick and Mortar Site,14110,76.5,reported,2024.0,0
+27131070101,Lonsdale,55046,Rice,Brick and Mortar Site,14111,263.5833333333333,reported,2024.0,0
+27037060711,Burnsville,55113,Dakota,Brick and Mortar Site,14115,645.0,reported,2024.0,0
+27063480200,Heron Lake,56137,Jackson,Brick and Mortar Site,14116,65.33333333333333,reported,2024.0,0
+27033270200,Westbrook,56183,Cottonwood,Brick and Mortar Site,14117,119.91666666666667,reported,2024.0,0
+27053110900,Minneapolis,55405,Hennepin-Minneapolis,Brick and Mortar Site,14120,525.0909090909091,reported,2024.0,0
+27123041302,Roseville,55113,Ramsey-Suburbs,Brick and Mortar Site,14121,704.5,reported,2024.0,0
+27081201002,Tyler,56178,Lincoln,Brick and Mortar Site,14122,162.0,reported,2024.0,0
+27003051203,Fridley,55432,Anoka,Outreach Program,14126,147.66666666666666,reported,2024.0,0
+27171100900,Rockford,55373,Wright,Brick and Mortar Site,14128,757.3333333333334,reported,2024.0,0
+27013171400,Mapleton,56065,Blue Earth,Brick and Mortar Site,14129,1086.75,reported,2024.0,0
+27091790600,Fairmont,56031,Martin,Brick and Mortar Site,14131,1019.9166666666666,reported,2024.0,0
+27053126000,Minneapolis,55404,Hennepin-Minneapolis,Brick and Mortar Site,14132,423.5,reported,2024.0,0
+27053008500,Minneapolis,55407,Hennepin-Minneapolis,Brick and Mortar Site,14133,6648.833333333333,reported,2024.0,0
+27139081301,Belle Plaine,56011,Scott,Brick and Mortar Site,14134,503.8333333333333,reported,2024.0,0
+27049080700,Kenyon,55946,Goodhue,Brick and Mortar Site,14135,53.625,reported,2024.0,0
+27069090200,Hallock,56728,Kittson,Brick and Mortar Site,14139,186.83333333333334,reported,2024.0,0
+27053102500,Minneapolis,55413,Hennepin-Minneapolis,Brick and Mortar Site,14146,2547.8333333333335,reported,2024.0,0
+27015960600,Springfield,56087,Brown,Brick and Mortar Site,14147,329.75,reported,2024.0,0
+27053001700,Minneapolis,55413,Hennepin-Minneapolis,Brick and Mortar Site,14148,2237.0,reported,2024.0,0
+27101900200,Fulda,56131,Murray,Brick and Mortar Site,14149,97.08333333333333,reported,2024.0,0
+27033270400,Windom,56101,Cottonwood,Brick and Mortar Site,14150,563.0833333333334,reported,2024.0,0
+27159480200,Verndale,56481,Wadena,Brick and Mortar Site,14151,274.75,reported,2024.0,0
+27145011302,Cold Spring,56320,Stearns,Brick and Mortar Site,14159,380.4166666666667,reported,2024.0,0
+27025110302,North Branch,55056,Chisago,Outreach Program,14160,498.1666666666667,reported,2024.0,0
+27053125700,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,14161,823.6666666666666,reported,2024.0,0
+27053011000,Minneapolis,55417,Hennepin-Minneapolis,Brick and Mortar Site,14166,2697.3333333333335,reported,2024.0,0
+27053102500,Minneapolis,55413,Hennepin-Minneapolis,Brick and Mortar Site,14167,890.6666666666666,reported,2024.0,0
+27123033200,St. Paul,55104,Ramsey-Saint Paul,Outreach Program,14168,1426.4166666666667,reported,2024.0,0
+27141030504,Elk River,55330,Sherburne,Outreach Program,14171,708.8333333333334,reported,2024.0,0
+27057070300,Laporte,56461,Hubbard,Brick and Mortar Site,14176,114.83333333333333,reported,2024.0,0
+27013171101,Mankato,56001,Blue Earth,College Campus Program ,14177,1153.25,reported,2024.0,0
+27027030202,Barnesville,56514,Clay,Brick and Mortar Site,14181,87.25,reported,2024.0,0
+27163070910,Oakdale,55128,Washington,Outreach Program,14183,1710.0833333333333,reported,2024.0,0
+27115950700,Pine City,55063,Pine,Brick and Mortar Site,14184,797.0,reported,2024.0,0
+27037060717,Eagan,55121,Dakota,Outreach Program,14188,3333.6666666666665,reported,2024.0,0
+27037060816,Lakeville,55044,Dakota,Brick and Mortar Site,14191,839.6666666666666,reported,2024.0,0
+27123030602,Saint Paul,55103,Ramsey-Saint Paul,Brick and Mortar Site,14211,3852.0,reported,2024.0,0
+27123031100,St. Paul,55106,Ramsey-Saint Paul,Brick and Mortar Site,14212,2089.75,reported,2024.0,0
+27067780300,New London,56273,Kandiyohi,Brick and Mortar Site,14213,553.3333333333334,reported,2024.0,0
+27027030300,Moorhead,56560,Clay,Brick and Mortar Site,14378,80.45454545454545,reported,2024.0,0
+27157490400,Mazeppa,55956,Wabasha,Brick and Mortar Site,14394,36.833333333333336,reported,2024.0,0
+27079950400,Waterville,56096,Le Sueur,Brick and Mortar Site,14395,903.0,reported,2024.0,0
+27037060840,Apple Valley,55124,Dakota,Brick and Mortar Site,14397,984.5833333333334,reported,2024.0,0
+27003050811,Blaine,55434,Anoka,Brick and Mortar Site,14405,657.3333333333334,reported,2024.0,0
+27061940000,Ball Club,56636,Itasca,Outreach Program,14417,132.9090909090909,reported,2024.0,0
+27021960100,Federal Dam,56641,Cass,Outreach Program,14418,131.0,reported,2024.0,0
+27055020300,Houston,55943,Houston,Brick and Mortar Site,14424,495.6666666666667,reported,2024.0,0
+27099001400,Racine,55967,Mower,Brick and Mortar Site,14431,108.33333333333333,reported,2024.0,0
+27109001000,Rochester,55904,Olmsted,Brick and Mortar Site,14434,100.16666666666667,reported,2024.0,0
+27079950400,Elysian,56028,Le Sueur,Brick and Mortar Site,14436,81.27272727272727,reported,2024.0,0
+27157490400,Zumbro Falls,55991,Wabasha,Brick and Mortar Site,14440,249.16666666666666,reported,2024.0,0
+27109001703,Rochester,55901,Olmsted,Brick and Mortar Site,14442,123.83333333333333,reported,2024.0,0
+27109002300,Rochester,55906,Olmsted,Brick and Mortar Site,14443,408.6666666666667,reported,2024.0,0
+27109001701,Rochester,55901,Olmsted,Brick and Mortar Site,14445,85.33333333333333,reported,2024.0,0
+27109001902,Oronoco,55960,Olmsted,Brick and Mortar Site,14448,170.41666666666666,reported,2024.0,0
+27055020100,La Crescent,55947,Houston,Brick and Mortar Site,14453,906.0833333333334,reported,2024.0,0
+27139080208,Savage,55378,Scott,Outreach Program,14459,498.8888888888889,reported,2024.0,0
+27037060717,Eagan,55121,Dakota,Outreach Program,14460,440.0,reported,2024.0,0
+27037060717,Eagan,55121,Dakota,Outreach Program,14461,484.6666666666667,reported,2024.0,0
+27123034201,St. Paul,55102,Ramsey-Saint Paul,Outreach Program,14465,157.16666666666666,reported,2024.0,0
+27123034201,St. Paul,55102,Ramsey-Saint Paul,Outreach Program,14467,171.08333333333334,reported,2024.0,0
+27053026814,Minneapolis,55444,Ramsey-Suburbs,Outreach Program,14468,255.0,reported,2024.0,1
+27003050108,St Francis,55070,Anoka,Outreach Program,14471,1156.9166666666667,reported,2024.0,0
+27123034602,St. Paul,55106,Ramsey-Saint Paul,Outreach Program,14472,2306.4166666666665,reported,2024.0,0
+27139081103,Elko New Market,55054,Anoka,Outreach Program,14473,1431.0,reported,2024.0,0
+27003050401,Anoka,55303,Anoka,Brick and Mortar Site,14474,1134.8181818181818,reported,2024.0,0
+27063480400,Jackson,56143,Jackson,Brick and Mortar Site,14475,719.4166666666666,reported,2024.0,0
+27037061005,Rosemount,55068,Dakota,Brick and Mortar Site,14476,1320.0833333333333,reported,2024.0,0
+27053126201,Minneapolis,55405,Hennepin-Minneapolis,Brick and Mortar Site,14484,140.41666666666666,reported,2024.0,0
+27053026815,Minneapolis,55444,Hennepin-Suburbs,Brick and Mortar Site,14485,65.81818181818181,reported,2024.0,0
+27053026815,Minneapolis,55444,Hennepin-Minneapolis,Brick and Mortar Site,14486,229.3,reported,2024.0,0
+27053026815,Minneapolis,55444,Hennepin-Minneapolis,Brick and Mortar Site,14487,220.66666666666666,reported,2024.0,0
+27053126201,Minneapolis,55405,Hennepin-Minneapolis,Brick and Mortar Site,14490,62.416666666666664,reported,2024.0,0
+27053103400,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,14493,354.3,reported,2024.0,0
+27053027602,Mound,55364,Hennepin-Suburbs,Outreach Program,14495,1181.9166666666667,reported,2024.0,0
+27053005901,Minneapolis,55404,Ramsey-Saint Paul,Outreach Program,14498,56.333333333333336,reported,2024.0,0
+27123042700,St. Paul,55109,Ramsey-Suburbs,Brick and Mortar Site,14502,1173.6923076923076,reported,2024.0,0
+27095970200,Onamia,56359,Mille Lacs,Tribal Program,14506,58.583333333333336,reported,2024.0,0
+27043460400,Blue Earth,56013,Faribault,Outreach Program,14508,502.6666666666667,reported,2024.0,0
+27147960300,Owatonna,55060,Steele,Brick and Mortar Site,14509,354.9166666666667,reported,2024.0,0
+27053109700,Minneapolis,55407,Hennepin-Minneapolis,Brick and Mortar Site,14510,195.2,reported,2024.0,0
+27053020202,Brooklyn Center,55430,Hennepin-Suburbs,Brick and Mortar Site,14512,126.85714285714286,reported,2024.0,0
+27035951303,Brainerd,56401,Crow Wing,Outreach Program,14526,410.0,reported,2024.0,0
+27143170198,Henderson,56044,Sibley,Outreach Program,14528,216.83333333333334,reported,2024.0,0
+27027020600,Moorhead,56560,Clay,Brick and Mortar Site,14539,1682.25,reported,2024.0,0
+27037060904,Farmington,55024,Dakota,Brick and Mortar Site,14547,415.8333333333333,reported,2024.0,0
+27003051600,Wyoming,55092,Chisago,Outreach Program,14549,517.75,reported,2024.0,0
+27119020200,Grand Forks,56721,Polk,Brick and Mortar Site,14551,530.0833333333334,reported,2024.0,0
+27021940002,Cass Lake,56633,Beltrami,Outreach Program,14584,175.0909090909091,reported,2024.0,0
+27053104100,Minneapolis,55405,Hennepin-Minneapolis,Brick and Mortar Site,14586,5318.75,reported,2024.0,0
+27053126300,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,14587,1648.0,reported,2024.0,0
+27123042102,Little Canada,55117,Ramsey-Suburbs,Outreach Program,14597,270.9,reported,2024.0,0
+27123042302,Maplewood,55109,Ramsey-Suburbs,Outreach Program,14598,218.0,reported,2024.0,0
+27037060739,Burnsville,55306,Dakota,Outreach Program,14608,569.9090909090909,reported,2024.0,0
+27123042401,Maplewood,55109,Ramsey-Saint Paul,Outreach Program,14613,593.2222222222222,reported,2024.0,0
+27085950700,Glencoe,55336,McLeod,Outreach Program,14621,250.63636363636363,reported,2024.0,0
+27123032100,St. Paul,55104,Ramsey-Saint Paul,Brick and Mortar Site,14630,14.333333333333334,reported,2024.0,0
+27123033100,St. Paul,55106,Ramsey-Saint Paul,Brick and Mortar Site,14631,2897.5,reported,2024.0,0
+27123042700,St. Paul,55109,Ramsey-Saint Paul,Outreach Program,14632,113.375,reported,2024.0,0
+27053126300,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,14634,7736.583333333333,reported,2024.0,0
+27071790500,Bigs Falls,56627,Koochiching,Outreach Program,14648,74.33333333333333,reported,2024.0,0
+27123042601,North St. Paul,55109,Ramsey-Suburbs,Outreach Program,14650,267.875,reported,2024.0,0
+27037061109,Hastings,55033,Dakota,Brick and Mortar Site,14651,916.4166666666666,reported,2024.0,0
+27131070901,Faribault,55021,Rice,Brick and Mortar Site,14659,7391.333333333333,reported,2024.0,0
+27035951301,Baxter,56425,Crow Wing,Brick and Mortar Site,14334,493.0833333333333,reported,2024.0,0
+27061940000,Inger,56636,Itasca,Outreach Program,14350,69.7,reported,2024.0,0
+27123033400,St. Paul,55104,Ramsey-Saint Paul,Brick and Mortar Site,14364,90.83333333333333,reported,2024.0,0
+27013170900,S. Lake,56681,Itasca,Outreach Program,14366,109.36363636363636,reported,2024.0,0
+27053026807,Brooklyn Park,55428,Ramsey-Suburbs,Brick and Mortar Site,14647,537.3636363636364,reported,2024.0,0
+27039950400,Hayfield,55940,Dodge,Brick and Mortar Site,14665,1402.9166666666667,reported,2024.0,0
+27053125700,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,14673,157.0,reported,2024.0,0
+27053125700,Minneapolis,55411,Hennepin-Suburbs,Brick and Mortar Site,14674,366.5,reported,2024.0,0
+27053026023,Eden Prairie,55347,Hennepin-Suburbs,Brick and Mortar Site,14675,216.45454545454547,reported,2024.0,0
+27053026514,Plymouth,55447,Hennepin-Suburbs,Brick and Mortar Site,14676,2540.4,reported,2024.0,0
+27027030111,Glyndon,56547,Clay,Brick and Mortar Site,14689,54.583333333333336,reported,2024.0,0
+27163070910,Landfall,55128,Washington,Outreach Program,14704,1695.0833333333333,reported,2024.0,0
+27123034702,St. Paul,55119,Ramsey-Saint Paul,Brick and Mortar Site,14716,6016.5,reported,2024.0,0
+27131070601,Northfield,55057,Rice,Brick and Mortar Site,14719,337.5833333333333,reported,2024.0,0
+27163070406,Lake Elmo,55042,Washington,Outreach Program,14722,385.9166666666667,reported,2024.0,0
+27037061109,Hastings,55033,Dakota,Outreach Program,14725,119.58333333333333,reported,2024.0,0
+27137015503,Nett Lake,55772,Koochiching,Tribal Program,14680.1,408.9166666666667,reported,2024.0,0
+27123041302,Roseville,55113,Hennepin-Suburbs,Brick and Mortar Site,14681.1,2184.5833333333335,reported,2024.0,0
+27037060104,St. Paul,55118,Dakota,Outreach Program,14694.1,1721.3333333333333,reported,2024.0,0
+27053101800,Minneapolis,55418,Hennepin-Minneapolis,Brick and Mortar Site,14696.1,305.5,reported,2024.0,0
+27099000200,Austin,55912,Mower,Outreach Program,14699.1,1937.6666666666667,reported,2024.0,0
+27109002000,Eyota,55934,Olmsted,Brick and Mortar Site,14705.1,840.4166666666666,reported,2024.0,0
+27163070603,Stillwater,55082,Washington,Outreach Program,14708.1,345.75,reported,2024.0,0
+27053108600,Minneapolis,55407,Hennepin-Minneapolis,Brick and Mortar Site,14710.1,7429.75,reported,2024.0,0
+27129790400,Morton,56270,Renville,Brick and Mortar Site,14711.1,1927.5,reported,2024.0,0
+27053025703,Bloomington,55431,Hennepin-Suburbs,Brick and Mortar Site,14662,4520.666666666667,reported,2024.0,0
+27053007801,Minneapolis,55408,Hennepin-Minneapolis,Brick and Mortar Site,14691,8912.916666666666,reported,2024.0,0
+27053002200,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,14713,2178.8333333333335,reported,2024.0,0
+27031480102,Grand Marais,55604,Cook,Outreach Program,14715,140.91666666666666,reported,2024.0,0
+27017070200,Cloquet,55720,Carlton,Outreach Program,14717,647.6363636363636,reported,2024.0,0
+27003051001,Spring Lake Park,55432,Anoka,Outreach Program,14739,43864.666666666664,reported,2024.0,0
+27053012101,Minneapolis,55417,Hennepin-Minneapolis,Brick and Mortar Site,14740,362.1666666666667,reported,2024.0,0
+27031480101,Grand Portage,55605,Cook,Outreach Program,14742,178.5,reported,2024.0,0
+27053026815,Minneapolis,55444,Ramsey-Saint Paul,Outreach Program,14743,41.333333333333336,reported,2024.0,0
+27061481002,Marble,55764,Itasca,Outreach Program,14751,143.7,reported,2024.0,0
+27095170700,Princeton,55371,Mille Lacs,Brick and Mortar Site,14765,2195.0833333333335,reported_other_year,2023.0,0
+27053008400,Minneapolis,55407,Hennepin-Minneapolis,Brick and Mortar Site,14767,7051.666666666667,reported,2024.0,0
+27053104400,Minneapolis,55403,Hennepin-Minneapolis,Brick and Mortar Site,14771,119.875,reported,2024.0,0
+27053102100,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,14772,122.7,reported,2024.0,0
+27123033200,St. Paul,55104,Ramsey-Saint Paul,Outreach Program,14790,210.41666666666666,reported,2024.0,0
+27163070907,Oakdale,55128,Washington,Outreach Program,14792,300.85714285714283,reported,2024.0,0
+27123032100,St. Paul,55104,Ramsey-Saint Paul,College Campus Program ,14793,658.8333333333334,reported,2024.0,0
+27001770200,Palisade,56469,Aitkin,Brick and Mortar Site,14798,93.66666666666667,reported,2024.0,0
+27053104802,Minneapolis,55454,Hennepin-Minneapolis,Brick and Mortar Site,14800,2276.75,reported,2024.0,0
+27047180800,Albert Lea,56007,Freeborn,Brick and Mortar Site,14801,1374.75,reported,2024.0,0
+27007450202,Bemidji,56601,Beltrami,Brick and Mortar Site,14802,69.58333333333333,reported,2024.0,0
+27037060713,Burnsville,55337,Dakota,Outreach Program,14809,2118.25,reported,2024.0,0
+27137001600,Duluth,55802,St. Louis,Tribal Program,14810,128.0,reported,2024.0,0
+27021960600,Backus,56435,Cass,Outreach Program,14909,190.4,reported,2024.0,0
+27065480200,Ogilvie,56358,Kanabec,Outreach Program,14911,105.55555555555556,reported_other_year,2023.0,0
+27007450202,Bemidji,56601,Beltrami,Brick and Mortar Site,14919,428.88521739130437,households_converted,2024.0,0
+27053026816,Brooklyn Park,55445,Hennepin-Suburbs,Brick and Mortar Site,15052,2692.8333333333335,reported,2024.0,0
+27053005901,Minneapolis,55404,Hennepin-Minneapolis,Brick and Mortar Site,15055,69.66666666666667,reported,2024.0,0
+27123042402,Maplewood,55109,Ramsey-Suburbs,Brick and Mortar Site,15059,6989.916666666667,reported,2024.0,0
+27009021104,Sauk Rapids,56377,Benton,Brick and Mortar Site,15139,468.9166666666667,reported,2024.0,0
+27053101600,Minneapolis,55411,Hennepin-Minneapolis,Brick and Mortar Site,15203,1103.3333333333333,reported,2024.0,0
+27003050602,Coon Rapids,55433,Anoka,Brick and Mortar Site,15211,219.11111111111111,reported,2024.0,0
+27003050826,Blaine,55434,Sherburne,College Campus Program ,15212,2648.5833333333335,reported,2024.0,0
+27037060832,Farmington,55024,Dakota,Outreach Program,15277,381.3333333333333,reported_other_year,2023.0,0
+27001770200,Palisade,56469,Aitkin,Outreach Program,15287,134.22222222222223,reported,2024.0,0
+27063480300,Lakefield,56150,Jackson,Brick and Mortar Site,15291,260.25,reported,2024.0,0
+27123032500,St. Paul,55104,Ramsey-Saint Paul,Brick and Mortar Site,15293,123.41666666666667,reported,2024.0,0
+27069090100,Lake Bronson,56734,Kittson,Brick and Mortar Site,15299,149.16666666666666,reported,2024.0,0
+27037060717,Eagan,55121,Dakota,Outreach Program,15302,576.8181818181819,reported,2024.0,0
+27037060717,Eagan,55121,Dakota,Outreach Program,15306,285.0833333333333,reported,2024.0,0
+27037060301,South St. Paul,55075,Dakota,Brick and Mortar Site,15308,322.0,reported,2024.0,0
+27139080600,Shakopee,55379,Scott,Brick and Mortar Site,15309,279.3636363636364,reported,2024.0,0
+27003050826,Blaine,55434,Anoka,College Campus Program ,15310,839.0,reported,2024.0,0
+27163070304,Mahtomedi,55115,Washington,Outreach Program,15326,561.25,reported,2024.0,0
+27053020804,Crystal,55429,Hennepin-Suburbs,Brick and Mortar Site,15327,1855.4166666666667,reported,2024.0,0
+27061480401,Marcell,56657,Itasca,Outreach Program,15337,138.9,reported,2024.0,0
+27095970200,Onamia,56359,Mille Lacs,Outreach Program,15338,235.6,reported,2024.0,0
+27123033700,St. Paul,55103,Ramsey-Saint Paul,Brick and Mortar Site,15341,2145.25,reported,2024.0,0
+27019091202,Cologne,55322,Carver,Brick and Mortar Site,15347,906.25,reported,2024.0,0
+27053104901,Minneapolis,55455,Hennepin-Minneapolis,Brick and Mortar Site,15349,3104.875,reported,2024.0,0
+27053102500,Minneapolis,55413,Hennepin-Minneapolis,Brick and Mortar Site,15353,194.28571428571428,reported,2024.0,0
+27061480901,Grand Rapids,55744,Itasca,Brick and Mortar Site,15359,195.1,reported,2024.0,0
+27053025302,Bloomington,55420,Hennepin-Suburbs,Brick and Mortar Site,15372,529.75,reported,2024.0,0
+27123033200,St. Paul,55104,Ramsey-Saint Paul,Brick and Mortar Site,15442,8159.0,reported,2024.0,0
+27145000601,Saint Cloud,56301,Stearns,Brick and Mortar Site,15505,387.8,reported,2024.0,0
+27027030112,Dilworth,56529,Clay,Brick and Mortar Site,15506,339.3333333333333,reported,2024.0,0
+27141030504,Elk River,55330,Sherburne,Outreach Program,15679,148.9,reported,2024.0,1
+27105105400,Worthington,56187,Nobles,Brick and Mortar Site,15712,730.6,reported,2024.0,0
+27053106900,Minneapolis,55404,Hennepin-Minneapolis,Brick and Mortar Site,15747,2496.3,reported,2024.0,0
+27109000300,Rochester,55904,Olmsted,Brick and Mortar Site,15748,270.0,reported,2024.0,0
+27123032400,Saint Paul,55104,Ramsey,,15752,1230.7083333333335,imputed_county_median,,0
+27019090102,Watertown,55388,Carver,Brick and Mortar Site,15757,181.36363636363637,reported,2024.0,0
+27043460500,Bricelyn,56014,Faribault,Brick and Mortar Site,15764,220.0,reported,2024.0,0
+27071790500,Birchdale,56623,Koochiching,Outreach Program,15769,65.4,reported,2024.0,0
+27053005901,Minneapolis,55404,Hennepin-Minneapolis,Brick and Mortar Site,15825,188.0,reported,2024.0,0
+27053108700,Minneapolis,55406,Hennepin-Minneapolis,Brick and Mortar Site,15827,707.6666666666666,reported,2024.0,0
+27087940300,Naytahwaush,56557,Mahnomen,Brick and Mortar Site,15828,607.7142857142857,reported,2024.0,0
+27053104001,Minneapolis,55413,Hennepin,Brick and Mortar Site,15848,428.88521739130437,imputed_state_median,,0
+27053103400,Minneapolis,55405,Hennepin-Minneapolis,Brick and Mortar Site,15851,222.66666666666666,reported_other_year,2025.0,0
+27003050608,Coon Rapids,55433,Anoka,Brick and Mortar Site,15854,541.3333333333334,reported_other_year,2025.0,0
+27123032100,Saint Paul,55104,Ramsey,Outreach Program,16286,1230.7083333333335,imputed_county_median,,0
+27123032700,Saint Paul,55103,Ramsey,Outreach Program,16287,1230.7083333333335,imputed_county_median,,0
+27007450500,Kelliher,56650,Beltrami,Brick and Mortar Site,16379,49.0,reported_other_year,2025.0,0
+27003050501,Anoka,55303,Anoka,Brick and Mortar Site,16381,733.4,reported_other_year,2025.0,0
+27123031500,St. Paul,55130,Ramsey,Brick and Mortar Site,16384,1544.1666666666667,reported_other_year,2026.0,0
+27123032600,St. Paul,55102,Ramsey,Brick and Mortar Site,16389,917.25,reported_other_year,2025.0,0
+27163071208,Cottage Grove,55016,Washington,Brick and Mortar Site,16391,10861.0,reported_other_year,2025.0,0
+27083360500,Marshall,56258,Lyon,College Campus Program ,16393,359.0,reported_other_year,2025.0,0
+27007450600,Bemidji,56601,Beltrami,Brick and Mortar Site,16395,124.5,reported_other_year,2025.0,0
+27123031300,St. Paul,55103,Ramsey,Brick and Mortar Site,16473,1614.75,reported_other_year,2025.0,0
+27123033100,St. Paul,55106,Ramsey,Brick and Mortar Site,16486,187.25,reported,2024.0,0
+27031480101,Grand Portage,55605,Cook,,16488,178.5,imputed_county_median,,0
+27007940001,Red Lake,56671,Beltrami,,16491,149.79545454545456,imputed_county_median,,0
+27007450400,Blackduck,56630,Beltrami,Brick and Mortar Site,16494,65.5,reported_other_year,2025.0,0
+27053104802,Minneapolis,55455,Hennepin,Brick and Mortar Site,16496,316.0,reported_other_year,2025.0,0
+27053104901,Minneapolis,55455,Hennepin,Agency or Tribal Nation,16499,,none,,0
+27137001900,Duluth,55811,Saint Louis,Brick and Mortar Site,16591,428.88521739130437,imputed_state_median,,0
+27137010302,Hermantown,55808,Saint Louis,Brick and Mortar Site,16593,428.88521739130437,imputed_state_median,,0
+27053105201,Minneapolis,55403,Hennepin,Brick and Mortar Site,16601,506.0,reported_other_year,2026.0,0
+27053106200,Minneapolis,55404,Hennepin,Brick and Mortar Site,16607,,none,,0
+27035951301,Baxter,56425,Crow Wing,Brick and Mortar Site,16676,2365.6666666666665,reported_other_year,2026.0,0
+27145010402,Albany,56307,Stearns,Agency or Tribal Nation,16681,,none,,0
+27053020302,Brooklyn Center,55429,Hennepin-Suburbs,Agency or Tribal Nation,16692,,none,,0
+27021940002,Cass Lake,56633,Cass,Agency or Tribal Nation,16695,,none,,0
+27035950204,Crosslake,56442,Crow Wing,Agency or Tribal Nation,16703,,none,,0
+27061480302,Deer River,56636,Itasca,Agency or Tribal Nation,16705,,none,,0
+27021960700,Pine River,56474,Cass,Agency or Tribal Nation,16753,,none,,0
+27021960100,Remer,56672,Cass,Agency or Tribal Nation,16758,,none,,1
+27001770100,Jacobson,55752,Aitkin,Agency or Tribal Nation,16801,,none,,0
+27001770300,Aitkin,56431,Aitkin,Agency or Tribal Nation,16802,,none,,0
+27157490500,Elgin,55932,Wabasha,Agency or Tribal Nation,16803,,none,,0
+27161790200,New Richland,56072,Waseca,Agency or Tribal Nation,16821,,none,,0
+27131070101,Lonsdale,55046,Rice,Agency or Tribal Nation,16833,,none,,0
+27159480300,Wadena,56482,Wadena,Agency or Tribal Nation,16917,278.0,reported_other_year,2026.0,0
+27053105700,Minneapolis,55404,Hennepin,Other,16920,428.88521739130437,imputed_state_median,,0
+27123037100,St Paul,55107,Ramsey,Other,16921,1230.7083333333335,imputed_county_median,,0
+27053126000,Minneapolis,55407,Hennepin,Other,16922,428.88521739130437,imputed_state_median,,0
+27123031000,St Paul,55130,Ramsey,Other,16923,1230.7083333333335,imputed_county_median,,0
+27053109100,Minneapolis,55416,Hennepin,Other,16924,428.88521739130437,imputed_state_median,,0
+27123031400,St Paul,55117,Ramsey,Other,16925,1230.7083333333335,imputed_county_median,,0
+27123031200,St Paul,55103,Ramsey,Other,16926,1230.7083333333335,imputed_county_median,,0
+27123032200,St Paul,55104,Ramsey,Other,16927,1230.7083333333335,imputed_county_median,,0
+27053022102,St Louis Park,55426,Hennepin-Suburbs,Other,16928,2050.041666666667,imputed_county_median,,0
+27123030703,St Paul,55106,Ramsey,Other,16929,1230.7083333333335,imputed_county_median,,0
+27053101600,Minneapolis,55411,Hennepin,Other,16930,428.88521739130437,imputed_state_median,,0
+27123030201,St Paul,55108,Ramsey-Suburbs,Other,16931,620.9318181818182,imputed_county_median,,0
+27123036700,St Paul,55116,Ramsey,Other,16932,1230.7083333333335,imputed_county_median,,0
+27123035500,St Paul,55102,Ramsey,Other,16933,1230.7083333333335,imputed_county_median,,0
+27053005901,Minneapolis,55404,Hennepin,Other,16934,428.88521739130437,imputed_state_median,,0
+27053101900,Minneapolis,55418,Hennepin,Other,16935,428.88521739130437,imputed_state_median,,0
+27003051501,Columbia Heights,55421,Anoka,Other,16936,1145.8674242424242,imputed_county_median,,0
+27123034601,St Paul,55106,Ramsey,Other,16937,1230.7083333333335,imputed_county_median,,0
+27053102800,Minneapolis,55441,Hennepin-Suburbs,Other,16938,2050.041666666667,imputed_county_median,,0
+27123033700,St Paul,55103,Ramsey,Other,16939,1230.7083333333335,imputed_county_median,,0
+27123031900,St Paul,55114,Ramsey,Other,16940,1230.7083333333335,imputed_county_median,,0
+27053020700,Crystal,55429,Hennepin-Suburbs,Other,16941,2050.041666666667,imputed_county_median,,0
+27053020201,Brooklyn Center,55430,Hennepin-Suburbs,Other,16942,2050.041666666667,imputed_county_median,,0
+27053102500,Minneapolis,55413,Hennepin,Other,16943,428.88521739130437,imputed_state_median,,0
+27003051001,Spring Lake Park,55432,Anoka,Other,16944,1145.8674242424242,imputed_county_median,,0
+27123042800,St Paul,55101,Ramsey,Other,16945,1230.7083333333335,imputed_county_median,,0
+27053980100,Minneapolis,55417,Hennepin,Other,16946,428.88521739130437,imputed_state_median,,0
+27123032400,St Paul,55104,Ramsey,Other,16947,1230.7083333333335,imputed_county_median,,0
+27171100705,Buffalo,55313,Wright,Other,16948,703.75,imputed_county_median,,0
+27085950200,Hutchinson,55350,Mcleod,Other,16949,428.88521739130437,imputed_state_median,,0
+27013170500,Mankato,56001,Blue Earth,Other,16950,1153.25,imputed_county_median,,0
+27025110302,North Branch,55056,Chisago,Other,16951,517.75,imputed_county_median,,0
+27145011307,St Joseph,56374,Stearns,Other,16952,339.625,imputed_county_median,,0
+27049080102,Red Wing,55066,Goodhue,Other,16953,351.9166666666667,imputed_county_median,,0
+27025110201,Rush City,55069,Chisago,Other,16954,517.75,imputed_county_median,,0
+27145000701,St Cloud,56303,Stearns,Other,16955,339.625,imputed_county_median,,0
+27009021201,St Cloud,56304,Stearns,Other,16956,339.625,imputed_county_median,,0
+27145010900,Brooten,,Stearns,,16979,339.625,imputed_county_median,,0
+27019091001,Chaska,55318,Carver,,16981,906.25,imputed_county_median,,0
+27037060737,Burnsville,55337,Dakota,Other,16982,645.0,imputed_county_median,,0

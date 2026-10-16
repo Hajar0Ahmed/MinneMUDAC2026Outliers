@@ -1,0 +1,6 @@
+venv/
+.venv/
+env/
+data/Spatial/minnesota-latest.osm.pbf
+data/Spatial/mn_buildings.gpkg
+data/Spatial/tl_2023_us_zcta520.zip

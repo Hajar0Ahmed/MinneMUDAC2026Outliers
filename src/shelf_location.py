@@ -28,10 +28,7 @@ import geopandas as gpd
 import osmnx as ox
 import time
 import urllib.request
-<<<<<<< HEAD
 import zlib 
-=======
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 from pathlib import Path
 from shapely.ops import unary_union
 
@@ -64,7 +61,6 @@ def get_locations():
     '''
 
     #---- Load datan----#
-<<<<<<< HEAD
     orgdata = pd.read_csv("data/processed/org_data.csv",
                       dtype={"GEO_ID": str, "Zip": str, "_id_site": str})
     orgdata["_id_site"] = orgdata["_id_site"].str.strip().str.replace(r"\.0$", "", regex=True)
@@ -73,10 +69,6 @@ def get_locations():
     n_all = len(orgdata)
     orgdata = orgdata[orgdata["capacity"].notna() & (orgdata["capacity"] > 0)]
     print(f"Placing {len(orgdata)} of {n_all} shelves (rest have no usable capacity)")
-=======
-    orgdata = pd.read_csv("data/processed/org_data.csv", dtype={"GEO_ID": str})
-    orgdata["Zip"] = orgdata["Zip"].astype("Int64").astype(str).str.zfill(5)
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 
     #---- Load Boundary Maps ----#
     tracts, zips, places = load_boundaries(orgdata)
@@ -103,12 +95,8 @@ def estimate_food_shelf_locations(orgdata, tracts, zips, places,
 
     all_draws = []        # one small table for each food shelf
     building_cache = {}   # stores buildings so we don't download them twice
-<<<<<<< HEAD
     unplaced = []  
     
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     for _, row in orgdata.iterrows():
 
         #--- Step 1: find the area this food shelf must be in
@@ -116,10 +104,7 @@ def estimate_food_shelf_locations(orgdata, tracts, zips, places,
 
         # skip food shelves we cannot place
         if zone is None:
-<<<<<<< HEAD
             unplaced.append(row["_id_site"])  
-=======
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
             continue
 
         #--- Step 2: find the buildings inside that area
@@ -131,11 +116,7 @@ def estimate_food_shelf_locations(orgdata, tracts, zips, places,
         #--- Step 3: draw random locations
         # each food shelf gets its own random generator, so its draws do not
         # change if other food shelves are added or removed
-<<<<<<< HEAD
         rng = np.random.default_rng([seed, zlib.crc32(str(row["_id_site"]).encode())])
-=======
-        rng = np.random.default_rng([seed, int(row["_id_site"])])
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 
         if len(buildings) > 0:
             # pick a random building n_draws times
@@ -159,12 +140,8 @@ def estimate_food_shelf_locations(orgdata, tracts, zips, places,
     #---- Combine all food shelf draws ----#
     draws = pd.concat(all_draws, ignore_index=True)
     draws = gpd.GeoDataFrame(draws, geometry="geometry", crs=CRS)
-<<<<<<< HEAD
     
     print(draws.groupby("constraint_used")["_id_site"].nunique())
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     # convert to longitude and latitude
     draws = draws.to_crs(4326)
     draws["lon"] = draws.geometry.x

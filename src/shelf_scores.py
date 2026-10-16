@@ -25,7 +25,6 @@ SHELF_PATH = "data/processed/org_data.csv"
 DRAWS_PATH = "data/processed/shelf_location_draws.csv"
 TRACT_PATH = "data/processed/final_data.csv"
 
-<<<<<<< HEAD
 RUN = "primary"   # "primary" | "reported_only" | "equal_supply"
 RUNS = {
     "primary":       {"sources": None, "equal": False},
@@ -34,25 +33,15 @@ RUNS = {
 }
 SUFFIX = "" if RUN == "primary" else f"_{RUN}"
 
-=======
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 OUT_DIR = "data/processed"
 SUMMARY_PATH = f"{OUT_DIR}/tract_e2sfca_scores.csv"
 MATRIX_PATH = f"{OUT_DIR}/e2sfca_draws.npy"          # (n_draws, n_tracts)
 INDEX_PATH = f"{OUT_DIR}/e2sfca_tract_index.csv"       # column order of the matrix
 DRAW_IDS_PATH = f"{OUT_DIR}/e2sfca_draw_ids.csv"       # row order of the matrix
 
-<<<<<<< HEAD
 CAPACITY_COL = "capacity"
 POP_COL = "population"
 RATE_COL = "food_insecure"  
-=======
-CAPACITY_COL = "IndividualsReg"
-POP_COL = "population"
-RATE_COL = "food_insecure"  
-BASE_USE = 0.08
-FI_SLOPE = 0.34
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 
 # Distance decay bands in miles: (from_miles, to_miles, weight)
 BANDS_MILES = [(0,5,1.0),
@@ -97,7 +86,6 @@ def load_inputs():
     Reads shelves, draws, and tracts. Validates capacities and missing values,
     then returns projected coordinates.
     '''
-<<<<<<< HEAD
     shelves = pd.read_csv(SHELF_PATH, dtype={"GEO_ID": str, "_id_site": str})
     draws = pd.read_csv(DRAWS_PATH, dtype={"_id_site": str})
     tracts = pd.read_csv(TRACT_PATH, dtype={"GEO_ID": str})
@@ -122,22 +110,6 @@ def load_inputs():
     draws = draws.merge(shelves, on="_id_site", how="inner", validate="many_to_one")
     per_draw = draws.groupby("draw").size()
     print(f"Shelves per draw: min {per_draw.min()}, max {per_draw.max()}")
-=======
-    shelves = pd.read_csv(SHELF_PATH, dtype={"GEO_ID": str})
-    draws = pd.read_csv(DRAWS_PATH)
-    tracts = pd.read_csv(TRACT_PATH, dtype={"GEO_ID": str})
-
-    draws["_id_site"] = draws["_id_site"].astype(int)
-    shelves["_id_site"] = shelves["_id_site"].astype(int)
-
-    n_before = shelves["_id_site"].nunique()
-    shelves = shelves[["_id_site", CAPACITY_COL]].dropna()
-    shelves = shelves[shelves[CAPACITY_COL] > 0]
-    print(f"Shelves with usable capacity: {len(shelves)} of {n_before} "
-          f"({n_before - len(shelves)} dropped)")
-
-    draws = draws.merge(shelves, on="_id_site", how="inner")
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     draws["x"], draws["y"] = project_xy(draws, "lon", "lat")
 
     # missing population defaults to zero demand
@@ -157,13 +129,9 @@ def load_inputs():
         rate = rate.fillna(fallback)
         print(f"{n_missing} tracts missing {RATE_COL}; filled with {fallback:.3f}")
 
-<<<<<<< HEAD
     tracts["demand"] = tracts[POP_COL] * (0.08 +  (0.34 * rate))
     
     assert tracts[["cen_lat", "cen_lon"]].notna().all().all(), "tracts missing centroids"
-=======
-    tracts["demand"] = tracts[POP_COL] * (BASE_USE + FI_SLOPE * rate)
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     
     tracts = tracts.reset_index(drop=True)
     tracts["x"], tracts["y"] = project_xy(tracts, "cen_lon", "cen_lat")
@@ -209,18 +177,12 @@ def score_one_draw(tract_xy, tract_pop, shelf_xy, shelf_cap):
     ratio = np.zeros_like(shelf_cap, dtype=float)
     has_demand = demand > 0
     ratio[has_demand] = shelf_cap[has_demand] / demand[has_demand]
-<<<<<<< HEAD
     
     # sanity chceck cuz something broke
     scores = (weights * ratio[None, :]).sum(axis=1)
     assert np.isclose((scores * tract_pop).sum(), ratio[has_demand] @ demand[has_demand]), "supply not conserved"
     return scores
 
-=======
-
-    # Step 2: Sum accessibility scores across accessible shelves per tract
-    return (weights * ratio[None, :]).sum(axis=1)
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 
 
 def get_weights(dist_m):

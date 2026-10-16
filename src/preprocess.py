@@ -1,6 +1,5 @@
 '''
 preprocess.py
-<<<<<<< HEAD
  
 Prepare data for geospatial analysis:
  
@@ -9,31 +8,15 @@ This file performs data preprocessing by cleaning and merging four data sources.
 Data Sources:
 1. Organizations.xlsx : A data set containing foodshelf locations
 1. org_FSStats.xlsx : A data set containing foodshelf inventory details
-=======
-
-Prepare data for geospatial analysis:
-
-This file consist of three functions which perform data preprocessing by
-cleaning and merging four data sources.
-
-Data Sources:
-1. Organizations.xlsls : A data set containing foodshelf locations
-1. org_FSStats.xlsls : A data set containing foodshelf inventory details
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 2. Census bureau data: A series of data sets that provide income and 
 demographic information across each census tract
 3. USDA data: The Food Access Reasearch atlas data set classifies tracts as
 low income low access (LILA)
 4. Grocery Gap Atlas: A data set that contains the grocery store access scores
 across each census 
-<<<<<<< HEAD
  
 '''
  
-=======
-'''
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 import pandas as pd
 import numpy as np
 import geopandas as gpd
@@ -44,7 +27,6 @@ from census import Census
 import os
 from pathlib import Path
 import us 
-<<<<<<< HEAD
  
  
 CENSUS_API_KEY = '4ff816c06406e44741d590bd7c46957a7890ea22'   # move to an env var / regenerate
@@ -54,16 +36,11 @@ MIN_COUNTY_SITES = 3        # min reporting shelves for a county median to be us
 MEASURES = ["IndividualsReg", "HouseholdsReg", "PoundsReg"]
  
  
-=======
-
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 def get_data():
     '''
     Combine and clean census data and USDA LILA data
     '''
     #---- READ MAP THE MEAL GAP DATA ----#
-<<<<<<< HEAD
     mmg = pd.read_excel("data/FeedingAmericaData/MMG2026_2024_Data_To_Share.xlsx",
                     sheet_name="County")
     
@@ -78,14 +55,6 @@ def get_data():
        
     #---- USE CENSUS API TO PULL POPULATION DATA ----#
     c = Census(CENSUS_API_KEY)
-=======
-    mealgap_data = pd.read_excel("data/FeedingAmericaData/MMG2026_2024_Data_To_Share.xlsx",sheet_name="County")
-     
-       
-    #---- USE CENSUS API TO PULL POPULATION DATA ----#
-    api_key = '4ff816c06406e44741d590bd7c46957a7890ea22'
-    c = Census(api_key)
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     
     census_data = c.acs5.state_county_tract(
     fields=['GEO_ID',
@@ -113,12 +82,8 @@ def get_data():
             ],
     state_fips='27',
     county_fips='*',
-<<<<<<< HEAD
     tract='*',  # asterisk means "all tracts"
     year=2023
-=======
-    tract='*'  # asterisk means "all tracts"
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     )
     
     #convert json to df
@@ -126,7 +91,6 @@ def get_data():
     
     ## Create calculation columns
     
-<<<<<<< HEAD
     census_data["GEO_ID"] = census_data["state"] + census_data["county"] + census_data["tract"]
     census_data["county_fips"] = census_data["state"] + census_data["county"]
     
@@ -144,27 +108,6 @@ def get_data():
                                          census_data["B25044_001E"])
     
     census_data["other/multirace"] = census_data["B02001_007E"] + census_data["B02001_008E"]
-=======
-    census_data['GEO_ID'] = census_data['GEO_ID'].astype(str).str[-11:]
-    
-    #calculate poverty rate
-    census_data['poverty_rate']= 100* (census_data['B17001_002E'].astype(int)/
-                                       census_data['B17001_001E'].astype(int).replace({ 0 : np.nan }))
-    
-    #calculate number of poeple without vehicles
-    census_data['no_vehicle']=(census_data['B25044_003E'].astype(int)+
-                                   census_data['B25044_010E'].astype(int))/census_data['B25044_001E'].astype(int).replace({ 0 : np.nan })
-    
-    #calculate percent of households that recieve SNAP
-    census_data['snap']= 100* (census_data['B22010_002E'].astype(int)/
-                                       census_data['B22010_001E'].astype(int).replace({ 0 : np.nan }))
-    
-    census_data['other/multirace']=census_data['B02001_007E'].astype(int) +census_data['B02001_008E'].astype(int)
-    
-    #caclculate food insecurity prt tract using map the meal gap
-    census_data['food_insecure']= ((census_data['poverty_rate']+
-                                    census_data['snap'])/2)* mealgap_data["Overall Food Insecurity Rate"]
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     
     #rename columns
     census_data.rename(columns={"B01003_001E": "population",
@@ -187,7 +130,6 @@ def get_data():
     cen = cen.rename(columns={"LATITUDE": "cen_lat", "LONGITUDE": "cen_lon"})
     
    
-<<<<<<< HEAD
     census_data = census_data.merge(cen[["GEO_ID", "cen_lat", "cen_lon"]],
                                     on="GEO_ID", how="left", validate="one_to_one")
     
@@ -210,9 +152,6 @@ def get_data():
     census_data["food_insecure"] = census_data["food_insecure"].fillna(census_data["county_fi_rate"])
     
     
-=======
-    census_data = pd.merge(census_data,cen, on=["GEO_ID"])
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     
     #select relevant columns
     census_data = census_data.loc[:,['GEO_ID','population','median_income',
@@ -221,25 +160,15 @@ def get_data():
                                      'white', 'black', 'native', 'asian',
                                      'pacific_islander','other/multirace','hispanic','not_citizen',
                                      "cen_lat","cen_lon"]]
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     #write to a csv
     census_data.to_csv("data/processed/census_data.csv",index=False)
     
     
     #---- READ USDA LRAM and SRAM DATA ----#
-<<<<<<< HEAD
     usda_data= pd.read_csv("data/USDA/LRAM.csv", low_memory=False)
     
     usda_data = usda_data[usda_data['State']== "Minnesota"].copy()
-=======
-    usda_data= pd.read_csv("data/USDA/LRAM.csv")
-    
-    usda_data = usda_data[usda_data['State']== "Minnesota"]
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     usda_data["GEO_ID"] = clean_geoid(usda_data["CensusTract"])
     
     usda_data.rename(columns={ "PovertyRate":"usda_poverty_rate",
@@ -253,30 +182,19 @@ def get_data():
                                         "TractWhite","TractBlack","TractAsian","TractNHOPI",
                                         "TractAIAN","TractOMultir", "TractHispanic"])
     
-<<<<<<< HEAD
     #explicit match flag (a NaN in a USDA column can also be a real missing value)
     usda_data["in_usda"] = True
     
-=======
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     #write to a csv
     usda_data.to_csv("data/processed/usda_data.csv",index=False)
     
     
     #---- READ GROCERY ATLAS DATA ----#
-<<<<<<< HEAD
     atlas_data = pd.read_csv("data/GroceryAtlasData/access_score.csv", low_memory=False)
  
     atlas_data["GEO_ID"] = clean_geoid(atlas_data["GEOID"])
     atlas_data = atlas_data[atlas_data["GEO_ID"].str.startswith("27", na=False)]
  
-=======
-    atlas_data = pd.read_csv("data/GroceryAtlasData/access_score.csv")
-    
-    atlas_data["GEO_ID"] = clean_geoid(atlas_data["GEOID"])
-    atlas_data = atlas_data[atlas_data["GEO_ID"].str.startswith("27", na=False)]
-    
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     atlas_data = atlas_data.loc[:,['GEO_ID', 'gravity_2023','gravity_2023_state_percentile',
                                    'gravity_2023_county_percentile',"hhi_2023",
                                    'hhi_2023_state_percentile','hhi_2023_county_percentile',
@@ -284,18 +202,13 @@ def get_data():
                                    'segregation_2023_state_percentile',
                                    'segregation_2023_county_percentile']] 
     
-<<<<<<< HEAD
     atlas_data = atlas_data.drop_duplicates()
     assert atlas_data["GEO_ID"].is_unique, "Atlas has conflicting rows per tract"
  
-=======
-     
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     #write to csv
     atlas_data.to_csv("data/processed/atlas_data.csv",index=False)
     
     #--- Merge Results together across all data sets on GEO_ID
-<<<<<<< HEAD
     combined = (census_data
             .merge(usda_data, on="GEO_ID", how="left", validate="one_to_one")
             .merge(atlas_data, on="GEO_ID", how="left", validate="one_to_one"))
@@ -309,16 +222,6 @@ def get_data():
     
     #--- Merge in organization data 
     final_data = clean_org_data(combined)   
-=======
-    data_frames = [census_data,usda_data,atlas_data]
-    
-    combined_data = functools.reduce(lambda left,right: pd.merge(left,right,on="GEO_ID"),data_frames)
-    
-    combined_data.to_csv("data/processed/combined_data.csv",index=False)
-    
-    #--- Merge in organization data 
-    final_data = clean_org_data(combined_data)   
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     
     final_data.to_csv("data/processed/final_data.csv",index=False)
     
@@ -328,7 +231,6 @@ def get_data():
     
     
     
-<<<<<<< HEAD
  
 def clean_org_data(combined_data):
     '''
@@ -338,17 +240,10 @@ def clean_org_data(combined_data):
     flagged as a distribution site or present in the stats file. Parent
     "Agency" records (isDistributionSite == 0, no stats) are administrative
     umbrellas for the real sites, so they are not shelves.
-=======
-
-def clean_org_data(combined_data):
-    '''
-    
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     '''
     orgdata = pd.read_excel("data/ChallengeData/Organization.xlsx",
                         dtype={"block_geoid": str})
     orgstats = pd.read_excel("data/ChallengeData/org_FSStats.xlsx")
-<<<<<<< HEAD
  
     #--- Clean ids (keeps real decimal ids like 13462.1, strips only ".0") ---#
     orgdata["_id_site"] = clean_site_id(orgdata["__ID"])
@@ -356,26 +251,10 @@ def clean_org_data(combined_data):
     orgstats = orgstats.dropna(subset=["_id_site"])
     
     stats_ids = set(orgstats["_id_site"])
-=======
-    
-    
-    #--- Clean Org Stats ---#
-    orgstats["_id_site"] = orgstats._id_site.astype(str)
-    orgstats = orgstats[orgstats["_Year"]==2024]
-    
-    
-    orgstats = orgstats.loc[:,["_id_site","HouseholdsReg",
-                               "IndividualsReg","PoundsReg", "FoodBank"]]
-    
-    orgstats = orgstats.dropna(subset=['_id_site'])
-    
-    orgstats = orgstats.groupby("_id_site",as_index=False).mean(numeric_only=True)
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     
     # --- Clean Org Data ---#
     orgdata["GEO_ID"] = clean_geoid(orgdata["block_geoid"])
     
-<<<<<<< HEAD
     #pick only active food shelves: drop farmers markets and meal programs.
     is_meal = orgdata["AgencyType"].astype("string").str.contains("meal", case=False, na=False)
     is_dist = (orgdata["isDistributionSite"] == 1) | orgdata["_id_site"].isin(stats_ids)
@@ -384,11 +263,6 @@ def clean_org_data(combined_data):
                       (orgdata["AgencyType"] != "Farmers Market") &
                       ~is_meal &
                       is_dist].copy()
-=======
-    #pick only active food shelfs 
-    orgdata = orgdata[ (orgdata["isActive"]==1 ) &
-                      (orgdata["AgencyType"] !="Farmers Market")] 
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     
     #Update Zip code and City based on Mail Zip and City if NA
     orgdata = fill_zip_and_city(orgdata)
@@ -397,7 +271,6 @@ def clean_org_data(combined_data):
     orgdata = orgdata[orgdata["GEO_ID"].notna() |
                     orgdata["Zip"].notna()]
     
-<<<<<<< HEAD
     #IF GEO_ID is NA and Zipcode exists calculate estimate of census tract by Zip centroid
     imputed_orgdata = get_missing_tracts_from_zip(orgdata)
     
@@ -421,44 +294,12 @@ def clean_org_data(combined_data):
                                 "capacity",
                                 "capacity_source",
                                 "capacity_year",
-=======
-    # Robust string ID cleaning (avoids float-to-int casting errors and removes '.0')
-    orgdata["_id_site"] = (
-        orgdata["__ID"]
-        .astype(str)
-        .str.replace(r"\.0$", "", regex=True)
-        .replace(["nan", "None", "<NA>"], np.nan)
-    )
-    
-    orgstats["_id_site"] = (
-        orgstats["_id_site"]
-        .astype(str)
-        .str.replace(r"\.0$", "", regex=True)
-        .replace(["nan", "None", "<NA>"], np.nan)
-    )
-    
-    #IF GEO_ID is NA and Zipcode exists calculate estimate of census tract by Zip centroid
-    imputed_orgdata = get_missing_tracts_from_zip(orgdata)
-    
-    #Merge them together (Inner join to exclude NA IDs)
-    org_data = pd.merge(orgstats, imputed_orgdata, on="_id_site", how="inner")
-    
-    # Select Relevant columns of data (using org_data, not orgdata)
-    org_data = org_data.loc[:, ["GEO_ID",
-                                "City",
-                                "Zip",
-                                "_id_site",
-                                "HouseholdsReg",
-                                "IndividualsReg",
-                                "PoundsReg",
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
                                 "is_zip_centroid"]]
     
     #Write org_data as a csv
     org_data.to_csv("data/processed/org_data.csv",index=False)
     
     #Aggregate by GEO_ID to add this column to census data
-<<<<<<< HEAD
     #shelf_count: number of food shelves with a usable capacity in a census tract
     shelf_count = (org_data.dropna(subset=["GEO_ID", "capacity"])
                         .groupby("GEO_ID").size()
@@ -466,15 +307,6 @@ def clean_org_data(combined_data):
  
     combined_data["GEO_ID"] = clean_geoid(combined_data["GEO_ID"])
  
-=======
-    #shelf_count: number of food shelves in a census tract
-    shelf_count = (org_data.dropna(subset=["GEO_ID"])
-                        .groupby("GEO_ID").size()
-                        .reset_index(name="shelf_count"))
-
-    combined_data["GEO_ID"] = clean_geoid(combined_data["GEO_ID"])
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     merged_df = pd.merge(combined_data, shelf_count, on="GEO_ID", how="left")
     merged_df["shelf_count"] = merged_df["shelf_count"].fillna(0).astype(int)
     
@@ -482,7 +314,6 @@ def clean_org_data(combined_data):
     
     
     
-<<<<<<< HEAD
 def clean_site_id(s):
     '''Site ids as strings. Only a trailing '.0' is stripped, because ids such
     as 13462.1 are real, distinct sites (casting to int would merge them).'''
@@ -573,50 +404,30 @@ def impute_missing_capacity(org_data, stats_ids):
     return org_data
     
     
-=======
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     
 def get_missing_tracts_from_zip(data, data_dir=None):
     data_dir = Path(data_dir) if data_dir else Path("data/Spatial")
     data_dir.mkdir(parents=True, exist_ok=True)
-<<<<<<< HEAD
  
     df = data.copy()
  
-=======
-
-    df = data.copy()
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     # keep existing 0/1 convention; NaN -> 0
     if "is_zip_centroid" not in df.columns:
         df["is_zip_centroid"] = 0
         
     df["is_zip_centroid"] = df["is_zip_centroid"].fillna(0).astype(int)
-<<<<<<< HEAD
  
     missing_mask = df["GEO_ID"].isna()
     if not missing_mask.any():
         return df
  
-=======
-
-    missing_mask = df["GEO_ID"].isna()
-    if not missing_mask.any():
-        return df
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     # Zip, falling back to the mailing zip
     zip5 = clean_zip(df["Zip"]).fillna(clean_zip(df["MailZip"]))
     needed_zips = zip5[missing_mask].dropna().unique()
     if len(needed_zips) == 0:
         print(f"{missing_mask.sum()} rows missing GEO_ID and no zip to impute from.")
         return df
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     zcta_path = data_dir / "tl_2023_us_zcta520.zip"
     if not zcta_path.exists():
         print("Downloading national ZCTA file (one time)...")
@@ -624,22 +435,14 @@ def get_missing_tracts_from_zip(data, data_dir=None):
             "https://www2.census.gov/geo/tiger/TIGER2023/ZCTA520/tl_2023_us_zcta520.zip",
             zcta_path,
         )
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     tracts_path = data_dir / "tl_2023_27_tract.zip"
     if not tracts_path.exists():
         urllib.request.urlretrieve(
             "https://www2.census.gov/geo/tiger/TIGER2023/TRACT/tl_2023_27_tract.zip",
             tracts_path,
         )
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     # Read only needed ZCTAs; fall back to full read if `where` isn't supported
     where = "ZCTA5CE20 IN (" + ",".join(f"'{z}'" for z in needed_zips) + ")"
     try:
@@ -647,31 +450,18 @@ def get_missing_tracts_from_zip(data, data_dir=None):
     except Exception:
         zcta_gdf = gpd.read_file(zcta_path)
         zcta_gdf = zcta_gdf[zcta_gdf["ZCTA5CE20"].isin(needed_zips)]
-<<<<<<< HEAD
  
     tracts_gdf = gpd.read_file(tracts_path)
  
     zcta_proj = zcta_gdf.to_crs(5070)
     tracts_proj = tracts_gdf.to_crs(5070)
  
-=======
-
-    tracts_gdf = gpd.read_file(tracts_path)
-
-    zcta_proj = zcta_gdf.to_crs(5070)
-    tracts_proj = tracts_gdf.to_crs(5070)
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     pts = gpd.GeoDataFrame(
         {"ZCTA5CE20": zcta_proj["ZCTA5CE20"].values},
         geometry=zcta_proj.geometry.representative_point().values,
         crs=5070,
     )
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     joined = gpd.sjoin(pts, tracts_proj[["GEOID", "geometry"]],
                        how="left", predicate="within")
     zip_to_geoid = (
@@ -679,16 +469,11 @@ def get_missing_tracts_from_zip(data, data_dir=None):
               .dropna(subset=["GEOID"])
               .set_index("ZCTA5CE20")["GEOID"]
     )
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     # Fill only missing rows, and flag only the ones actually filled
     filled = zip5[missing_mask].map(zip_to_geoid)
     df.loc[missing_mask, "GEO_ID"] = filled
     df.loc[filled.index[filled.notna()], "is_zip_centroid"] = 1
-<<<<<<< HEAD
  
     print(f"Imputed {filled.notna().sum()} GEO_IDs; "
           f"{df['GEO_ID'].isna().sum()} still missing.")
@@ -699,24 +484,11 @@ def fill_zip_and_city(df):
     """Fill Zip from MailZip, then fill City (MailCity -> own data -> zip lookup)."""
     df = df.copy()
  
-=======
-
-    print(f"Imputed {filled.notna().sum()} GEO_IDs; "
-          f"{df['GEO_ID'].isna().sum()} still missing.")
-    return df
-
-
-def fill_zip_and_city(df):
-    """Fill Zip from MailZip, then fill City (MailCity -> own data -> zip lookup)."""
-    df = df.copy()
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     # fall back to MailZip when Zip is empty
     zip_orig = clean_zip(df["Zip"])
     mail_zip = clean_zip(df["MailZip"])
     df["Zip"] = zip_orig.fillna(mail_zip)
     used_mail = zip_orig.isna() & mail_zip.notna()
-<<<<<<< HEAD
  
     #normalize blanks to missing    
     df["City"] = df["City"].astype("string").str.strip().replace("", pd.NA)
@@ -725,32 +497,17 @@ def fill_zip_and_city(df):
     mail_city = df["MailCity"].astype("string").str.strip()
     df.loc[used_mail, "City"] = df.loc[used_mail, "City"].fillna(mail_city[used_mail])
  
-=======
-
-    #normalize blanks to missing    
-    df["City"] = df["City"].astype("string").str.strip().replace("", pd.NA)
-
-    # If the zip came from mailing address, use the mailing city
-    mail_city = df["MailCity"].astype("string").str.strip()
-    df.loc[used_mail, "City"] = df.loc[used_mail, "City"].fillna(mail_city[used_mail])
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     #Use the most common city for that zip 
     known = df.dropna(subset=["Zip", "City"])
     zip_to_city = known.groupby("Zip")["City"].agg(lambda x: x.mode().iat[0])
     need = df["City"].isna() & df["Zip"].notna()
     df.loc[need, "City"] = df.loc[need, "Zip"].map(zip_to_city)
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     # use zip code to fill remaining cities
     need = df["City"].isna() & df["Zip"].notna()
     if need.any():
         res = pgeocode.Nominatim("us").query_postal_code(df.loc[need, "Zip"].tolist())
         df.loc[need, "City"] = res["place_name"].values
-<<<<<<< HEAD
  
     return df
  
@@ -780,16 +537,6 @@ def clean_zip(s):
     return s.astype(str).str.extract(r"(\d{5})", expand=False)
  
  
-=======
-
-    return df
-
-def clean_zip(s):
-    """Normalize to a 5-digit string; handles floats, ZIP+4, NaN."""
-    return s.astype(str).str.extract(r"(\d{5})", expand=False)
-
-
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 def clean_geoid(s, length=11):
     """Return tract IDs as clean strings; trims 15-digit block IDs to the
     11-digit tract and leaves anything invalid as missing."""
@@ -799,12 +546,8 @@ def clean_geoid(s, length=11):
          .str.replace(r"\.0$", "", regex=True)
          .str[:length]
     )
-<<<<<<< HEAD
     return out.where(out.str.len() == length)
  
 def safe_div(a, b):
     return a / b.where(b > 0)
  
-=======
-    return out.where(out.str.len() == length)
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49

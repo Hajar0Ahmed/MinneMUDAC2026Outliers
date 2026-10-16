@@ -72,16 +72,11 @@ def load_data():
     # 3. Make sure LILA columns are True/False
     for col in LILA_COLS:
         if col in gdf.columns:
-<<<<<<< HEAD
             gdf[col] = gdf[col].eq(1)
 
     # Drop unpopulated tracts and tracts with no score or retail value
     gdf = gdf[gdf["population"] > 0]
     
-=======
-            gdf[col] = gdf[col].astype(bool)
- 
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     # 4. Drop tracts with no score or no retail value
     gdf = gdf.dropna(subset=[SCORE_COL, RETAIL_COL]).reset_index(drop=True)
  
@@ -128,7 +123,6 @@ def build_weights(gdf):
 #----  Gi* Hot and Cold Spots ----#
 def run_gistar():
     '''
-<<<<<<< HEAD
     Runs Getis-Ord Gi* ONCE on the E2SFCA score for all tracts, using the full
     statewide neighbor structure (so urban tracts keep their rural neighbors).
     P-values are two-sided and FDR-adjusted across all tracts. Results are then
@@ -184,51 +178,6 @@ def run_gistar():
             lila = known[known[col]]
             non_lila = known[~known[col]]
 
-=======
-    Runs Getis-Ord Gi* on the E2SFCA score for all, urban and rural
-    tracts. Flags significant coldspots and hotspots and overlays them
-    with each LILA definition. Saves tract results and a LILA summary.
-    '''
-    # 1. Load data and split into groups
-    gdf = load_data()
-    groups = split_by_urbanicity(gdf)
- 
-    tract_results = []
-    summary_rows = []
- 
-    print("=" * 70)
-    print(" Gi* COLDSPOT ANALYSIS")
-    print("=" * 70)
- 
-    for name, sub in groups.items():
-        print(f"Group: {name} ({len(sub)} tracts)")
- 
-        # 2. Build weights for this group
-        sub, w = build_weights(sub)
- 
-        # 3. Run Gi* (star=True includes the tract itself)
-        y = sub[SCORE_COL].astype(float).values
-        g = G_Local(y, w, star=True, permutations=N_PERM, seed=SEED)
- 
-        sub["gi_z"] = g.Zs
-        sub["gi_p"] = g.p_sim
- 
-        # 4. Classify as coldspot, hotspot or not significant
-        sub["gi_class"] = "Not significant"
-        sub.loc[(sub["gi_p"] < ALPHA) & (sub["gi_z"] < 0), "gi_class"] = "Coldspot"
-        sub.loc[(sub["gi_p"] < ALPHA) & (sub["gi_z"] > 0), "gi_class"] = "Hotspot"
-        sub["group"] = name
- 
-        # 5. Overlay with each LILA definition
-        for col in LILA_COLS:
-            if col not in sub.columns:
-                print(f"Warning: '{col}' missing. Skipping.")
-                continue
- 
-            lila = sub[sub[col]]
-            non_lila = sub[~sub[col]]
- 
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
             summary_rows.append({
                 "group": name,
                 "definition": col,
@@ -240,7 +189,6 @@ def run_gistar():
                 "pct_lila_hotspot": (lila["gi_class"] == "Hotspot").mean() * 100,
                 "pct_non_lila_hotspot": (non_lila["gi_class"] == "Hotspot").mean() * 100,
             })
-<<<<<<< HEAD
 
     # 5. Save results (group = "all" keeps shelf_visuals.py working unchanged)
     tract_out = gdf[["GEO_ID", SCORE_COL, "gi_z", "gi_p_raw", "gi_p", "gi_class",
@@ -252,22 +200,6 @@ def run_gistar():
     summary_df = pd.DataFrame(summary_rows)
     summary_df.to_csv(OUT_GISTAR_SUMMARY, index=False)
 
-=======
- 
-        n_cold = (sub["gi_class"] == "Coldspot").sum()
-        print(f"  Coldspots: {n_cold}")
- 
-        tract_results.append(
-            sub[["GEO_ID", "group", SCORE_COL, "gi_z", "gi_p", "gi_class"] +
-                [c for c in LILA_COLS if c in sub.columns]]
-        )
- 
-    # 6. Save results
-    pd.concat(tract_results).to_csv(OUT_GISTAR, index=False)
-    summary_df = pd.DataFrame(summary_rows)
-    summary_df.to_csv(OUT_GISTAR_SUMMARY, index=False)
- 
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     return summary_df
  
  
@@ -330,12 +262,8 @@ def run_bivariate_moran():
     moran = Moran_Local_BV(x, y, w, permutations=N_PERM, seed=SEED)
  
     gdf["moran_I"] = moran.Is
-<<<<<<< HEAD
     gdf["moran_p_raw"] = moran.p_sim
     gdf["moran_p"] = fdr_bh(two_sided(moran.p_sim))
-=======
-    gdf["moran_p"] = moran.p_sim
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
  
     # 3. Convert the quadrant numbers (1-4) into labels
     quadrant_labels = {1: "HH", 2: "LH", 3: "LL", 4: "HL"}
@@ -350,11 +278,7 @@ def run_bivariate_moran():
         if col == "all tracts":
             sub = gdf
         elif col in gdf.columns:
-<<<<<<< HEAD
             sub = gdf[gdf["in_usda"] & gdf[col]]
-=======
-            sub = gdf[gdf[col]]
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
         else:
             print(f"Warning: '{col}' missing. Skipping.")
             continue
@@ -368,11 +292,7 @@ def run_bivariate_moran():
             f"{c}={(sub['moran_cluster'] == c).sum()}" for c in cluster_names))
  
     # 5. Save results
-<<<<<<< HEAD
     keep = ["GEO_ID", RETAIL_COL, SCORE_COL, "moran_I", "moran_p", "moran_cluster", "in_usda"]
-=======
-    keep = ["GEO_ID", RETAIL_COL, SCORE_COL, "moran_I", "moran_p", "moran_cluster"]
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     gdf[keep + [c for c in LILA_COLS if c in gdf.columns]].to_csv(OUT_MORAN, index=False)
     summary_df = pd.DataFrame(summary_rows)
     summary_df.to_csv(OUT_MORAN_SUMMARY, index=False)
@@ -432,17 +352,12 @@ def run_quadrat():
             f"{q}={(sub['quadrat'] == q).sum()}" for q in quadrat_names))
  
     # 5. Save results
-<<<<<<< HEAD
     keep = ["GEO_ID", RETAIL_COL, SCORE_COL, "quadrat", "in_usda"]
-=======
-    keep = ["GEO_ID", RETAIL_COL, SCORE_COL, "quadrat"]
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     gdf[keep + [c for c in LILA_COLS if c in gdf.columns]].to_csv(OUT_QUADRAT, index=False)
     summary_df = pd.DataFrame(summary_rows)
     summary_df.to_csv(OUT_QUADRAT_SUMMARY, index=False)
  
     return summary_df
-<<<<<<< HEAD
  
 
 
@@ -466,6 +381,3 @@ def fdr_bh(p):
     out = np.empty(n)
     out[order] = np.clip(adjusted, 0, 1)
     return out
-=======
- 
->>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49

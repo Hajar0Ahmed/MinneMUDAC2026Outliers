@@ -32,7 +32,11 @@ from matplotlib.patches import Patch
 LILA_COLS = ["LILATracts_1And10", "LILATracts_halfAnd10", "LILATracts_1And20"]
 
 from spatial_analysis import (
+<<<<<<< HEAD
     SHAPE_PATH, SHAPE_ID_COL, SCORE_COL, RETAIL_COL, SUMMARY_PATH,
+=======
+    SHAPE_PATH, SHAPE_ID_COL, SCORE_COL, RETAIL_COL,
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     OUT_GISTAR, OUT_SPEARMAN, OUT_MORAN, OUT_QUADRAT, OUT_QUADRAT_SUMMARY,
 )
 
@@ -91,6 +95,7 @@ def draw_cluster_map(ax, shapes, results, class_col, colors, title):
 
 def draw_lila_cluster_map(ax, shapes, results, class_col, colors, title, lila_col):
     '''
+<<<<<<< HEAD
     LILA-focused map: non-LILA tracts are light grey, tracts with unknown LILA
     status (no USDA match) are pale yellow, non-significant LILA tracts are a
     darker grey, and significant LILA tracts use their category colors.
@@ -106,11 +111,26 @@ def draw_lila_cluster_map(ax, shapes, results, class_col, colors, title, lila_co
         unknown.plot(ax=ax, color="#fdf0c8", edgecolor="white", linewidth=0.1)
 
     # 3. LILA tracts that are not significant: darker grey
+=======
+    Draws a LILA-focused map: non-LILA tracts are light grey, non-significant 
+    LILA tracts are a darker grey, and significant LILA tracts use their category colors.
+    '''
+    gdf = shapes.merge(results, on="GEO_ID", how="left")
+    
+    # 1. Base layer: All tracts light grey
+    gdf.plot(ax=ax, color="#f0f0f0", edgecolor="white", linewidth=0.1)
+
+    # 2. LILA non-significant tracts get a slightly darker grey
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     lila_nonsig = gdf[(gdf[lila_col] == True) & (gdf[class_col] == "Not significant")]
     if len(lila_nonsig) > 0:
         lila_nonsig.plot(ax=ax, color="#cccccc", edgecolor="white", linewidth=0.1)
 
+<<<<<<< HEAD
     # 4. Significant LILA tracts: category colors
+=======
+    # 3. Significant LILA tracts get their specific category colors
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     for label, color in colors.items():
         if label == "Not significant":
             continue
@@ -118,12 +138,20 @@ def draw_lila_cluster_map(ax, shapes, results, class_col, colors, title, lila_co
         if len(subset) > 0:
             subset.plot(ax=ax, color=color, edgecolor="white", linewidth=0.1)
 
+<<<<<<< HEAD
     # Legend
     handles = [Patch(facecolor=c, label=l) for l, c in colors.items() if l != "Not significant"]
     handles.append(Patch(facecolor="#cccccc", label="LILA (Not significant)"))
     handles.append(Patch(facecolor="#f0f0f0", label="Non-LILA / Other"))
     handles.append(Patch(facecolor="#fdf0c8", label="LILA status unknown"))
 
+=======
+    # Legend setup
+    handles = [Patch(facecolor=c, label=l) for l, c in colors.items() if l != "Not significant"]
+    handles.append(Patch(facecolor="#cccccc", label="LILA (Not significant)"))
+    handles.append(Patch(facecolor="#f0f0f0", label="Non-LILA / Other"))
+    
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     ax.legend(handles=handles, loc="lower left", fontsize=8, frameon=True)
     ax.set_title(title, fontsize=12)
     ax.set_axis_off()
@@ -156,6 +184,7 @@ def plot_coldspot_map(shapes, lila_col):
     results = pd.read_csv(OUT_GISTAR, dtype={"GEO_ID": str})
     results = results[results["group"] == "all"]
 
+<<<<<<< HEAD
     # Map A: All tracts (identical for every LILA definition, so save it once)
     if lila_col == LILA_COLS[0]:
         fig, ax = plt.subplots(figsize=(8, 9))
@@ -164,13 +193,27 @@ def plot_coldspot_map(shapes, lila_col):
         fig.savefig(os.path.join(FIG_DIR, "gistar_map_all.png"),
                     dpi=DPI, bbox_inches="tight")
         plt.close(fig)
+=======
+    # Map A: All tracts
+    fig, ax = plt.subplots(figsize=(8, 9))
+    draw_cluster_map(ax, shapes, results, "gi_class", GISTAR_COLORS,
+                     f"Food shelf access hot/cold spots (All tracts)")
+    path_all = os.path.join(FIG_DIR, f"gistar_map_{lila_col}.png")
+    fig.savefig(path_all, dpi=DPI, bbox_inches="tight")
+    plt.close(fig)
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 
     # Map B: LILA-focused map
     fig, ax = plt.subplots(figsize=(8, 9))
     draw_lila_cluster_map(ax, shapes, results, "gi_class", GISTAR_COLORS,
                           f"Food shelf access hot/cold spots ({lila_col} focus)", lila_col)
+<<<<<<< HEAD
     fig.savefig(os.path.join(FIG_DIR, f"gistar_map_{lila_col}_lila.png"),
                 dpi=DPI, bbox_inches="tight")
+=======
+    path_lila = os.path.join(FIG_DIR, f"gistar_map_{lila_col}_lila.png")
+    fig.savefig(path_lila, dpi=DPI, bbox_inches="tight")
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     plt.close(fig)
 
 
@@ -180,6 +223,7 @@ def plot_retail_vs_shelf(lila_col):
     spearman = pd.read_csv(OUT_SPEARMAN)
     rho = spearman.loc[spearman["group"] == "all", "spearman_rho"].iloc[0]
 
+<<<<<<< HEAD
     # percentile ranks across ALL tracts (matches the quadrat cutoffs)
     df["retail_rank"] = df[RETAIL_COL].rank(pct=True)
     df["shelf_rank"] = df[SCORE_COL].rank(pct=True)
@@ -187,12 +231,21 @@ def plot_retail_vs_shelf(lila_col):
     # tracts with no USDA match have unknown LILA status: leave them out
     n_unknown = int((~df["in_usda"]).sum())
     df = df[df["in_usda"]].copy()
+=======
+    df["retail_rank"] = df[RETAIL_COL].rank(pct=True)
+    df["shelf_rank"] = df[SCORE_COL].rank(pct=True)
+    
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     df[lila_col] = df[lila_col].astype(bool)
 
     fig, ax = plt.subplots(figsize=(7, 6))
     non_lila = df[~df[lila_col]]
     lila = df[df[lila_col]]
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     ax.scatter(non_lila["retail_rank"], non_lila["shelf_rank"],
                s=12, color="#bdbdbd", alpha=0.6, label="Non-LILA")
     ax.scatter(lila["retail_rank"], lila["shelf_rank"],
@@ -203,8 +256,12 @@ def plot_retail_vs_shelf(lila_col):
 
     ax.set_xlabel("Retail access (percentile rank)")
     ax.set_ylabel("Food shelf access, E2SFCA (percentile rank)")
+<<<<<<< HEAD
     ax.set_title(f"Retail vs food shelf access (rho = {rho:.2f}, all tracts)\n"
                  f"{n_unknown} tracts with unknown LILA status not shown", fontsize=10)
+=======
+    ax.set_title(f"Retail vs food shelf access (rho = {rho:.2f})")
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     ax.text(0.02, 0.02, "Double gap", fontsize=9, weight="bold")
     ax.text(0.02, 0.96, "Shelves fill gap", fontsize=9, weight="bold")
     ax.text(0.98, 0.02, "Shelves miss retail", fontsize=9, weight="bold", ha="right")
@@ -220,6 +277,7 @@ def plot_retail_vs_shelf(lila_col):
 def plot_moran_map(shapes, lila_col):
     results = pd.read_csv(OUT_MORAN, dtype={"GEO_ID": str})
 
+<<<<<<< HEAD
     # Map A: All tracts (save once)
     if lila_col == LILA_COLS[0]:
         fig, ax = plt.subplots(figsize=(8, 9))
@@ -228,13 +286,28 @@ def plot_moran_map(shapes, lila_col):
         fig.savefig(os.path.join(FIG_DIR, "moran_map_all.png"),
                     dpi=DPI, bbox_inches="tight")
         plt.close(fig)
+=======
+    # Map A: All tracts
+    fig, ax = plt.subplots(figsize=(8, 9))
+    draw_cluster_map(ax, shapes, results, "moran_cluster", MORAN_COLORS,
+                     f"Bivariate Local Moran's I (All tracts)")
+    path_all = os.path.join(FIG_DIR, f"moran_map_{lila_col}.png")
+    fig.savefig(path_all, dpi=DPI, bbox_inches="tight")
+    plt.close(fig)
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
 
     # Map B: LILA-focused map
     fig, ax = plt.subplots(figsize=(8, 9))
     draw_lila_cluster_map(ax, shapes, results, "moran_cluster", MORAN_COLORS,
+<<<<<<< HEAD
                           f"Bivariate Local Moran's I ({lila_col})", lila_col)
     fig.savefig(os.path.join(FIG_DIR, f"moran_map_{lila_col}_lila.png"),
                 dpi=DPI, bbox_inches="tight")
+=======
+                          f"Bivariate Local Moran's I ({lila_col} focus)", lila_col)
+    path_lila = os.path.join(FIG_DIR, f"moran_map_{lila_col}_lila.png")
+    fig.savefig(path_lila, dpi=DPI, bbox_inches="tight")
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     plt.close(fig)
 
 
@@ -267,16 +340,26 @@ def plot_quadrat_bars():
 
 def plot_tract_access_map(shapes):
     '''
+<<<<<<< HEAD
     Tract-level continuous access map using an index relative to the mean score.
     '''
     df = pd.read_csv(SUMMARY_PATH, dtype={"GEO_ID": str})
     gdf = shapes.merge(df, on="GEO_ID", how="left")
 
     # Normalize scores relative to the study-area mean
+=======
+    Draws a tract-level continuous access map using a normalized index
+    '''
+    df = pd.read_csv(OUT_QUADRAT, dtype={"GEO_ID": str})
+    gdf = shapes.merge(df, on="GEO_ID", how="left")
+    
+    # Normalize scores relative to the study area mean\
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     mean_score = gdf[SCORE_COL].mean()
     gdf["access_index"] = gdf[SCORE_COL] / mean_score if mean_score > 0 else 0.0
 
     fig, ax = plt.subplots(figsize=(8, 9))
+<<<<<<< HEAD
 
     # Diverging colormap centered on 1.0 (the statewide average)
     norm = mcolors.TwoSlopeNorm(
@@ -295,17 +378,45 @@ def plot_tract_access_map(shapes):
         legend=True,
         legend_kwds={
             "label": "E2SFCA access index (1.0 = average)",
+=======
+    
+    # Anchor the divergent colormap around 1.0 using TwoSlopeNorm
+    norm = mcolors.TwoSlopeNorm(
+        vmin=0.0, 
+        vcenter=0.75,
+        vmax=max(1.5,gdf["access_index"].quantile(0.99))
+    )
+    
+    gdf.plot(
+        ax=ax, 
+        column="access_index", 
+        cmap="RdYlBu_r", 
+        norm=norm,
+        edgecolor="white", 
+        linewidth=0.02, 
+        legend=True,
+        legend_kwds={
+            "label": "E2SFCA access index",
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
             "orientation": "vertical",
             "shrink": 0.55,
             "pad": 0.02
         }
     )
 
+<<<<<<< HEAD
     fig.suptitle("Food-Shelf Geographic Access in Minnesota, 2024",
                  fontsize=13, fontweight="bold", y=0.92)
     ax.set_title("Geographic Site Access (Tract-Level)", fontsize=11, loc="center", pad=10)
     ax.set_axis_off()
 
+=======
+    # Match the thematic layout hierarchy from your reference image
+    fig.suptitle("Food-Shelf Geographic Access in Minnesota, 2024", fontsize=13, fontweight="bold", y=0.92)
+    ax.set_title("Geographic Site Access (Tract-Level)", fontsize=11, loc="center", pad=10)
+    ax.set_axis_off()
+    
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     path = os.path.join(FIG_DIR, "tract_geographic_access_map.png")
     fig.savefig(path, dpi=DPI, bbox_inches="tight")
     plt.close(fig)

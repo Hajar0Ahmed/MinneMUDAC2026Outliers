@@ -37,7 +37,10 @@ def get_statistics():
     tracts = pd.read_csv(TRACT_PATH, dtype={"GEO_ID": str})
     
     df = tracts.merge(summary, on="GEO_ID", how="inner")
+<<<<<<< HEAD
     df = df[(df["population"] > 0) & df["in_usda"]].copy()
+=======
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
     q25_threshold = df[SCORE_COL].quantile(0.25)
     
     results = []
@@ -52,7 +55,11 @@ def get_statistics():
             print(f"Warning: '{col}' missing. Skipping.")
             continue
             
+<<<<<<< HEAD
         df[col] = df[col].eq(1)
+=======
+        df[col] = df[col].astype(bool)
+>>>>>>> 1d12938602ec54d6e6c3074c8d56820a2a622a49
         lila_group = df[df[col]][SCORE_COL].dropna()
         non_lila_group = df[~df[col]][SCORE_COL].dropna()
         

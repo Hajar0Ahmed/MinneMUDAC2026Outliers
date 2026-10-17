@@ -17,3 +17,20 @@ Q6 combines the competition data with several external public datasets. Dataset 
 | U.S. Census Bureau TIGERweb | 2020 Census blocks | Physical site coordinates and county-location checks used in the spatial and reporting-boundary sensitivity analyses |
 
 The primary Q6 comparison uses **2024** because it is the latest year for which the activity data, ACS county characteristics, and Feeding America food-insecurity estimates can be aligned directly. The 2025 persistence result uses actual 2025 food-shelf activity with the latest available 2024 population and food-insecurity benchmark and is therefore treated as a sensitivity check rather than a true 2025 need estimate.
+
+
+
+
+reading.ipynb cleans the competition activity data, standardizes county and agency information, corrects flagged household-count outliers, and creates the cleaned site-month dataset.
+
+county_table_2024.ipynb aggregates 2024 activity to the county level and merges county socioeconomic, rurality, food-bank, and reporting information.
+
+coverage_ratio.ipynb constructs the independent need benchmark and calculates the Need Coverage Ratio.
+
+hub_check.ipynb tests whether low county-level utilization may be explained by food-shelf use in neighboring counties.
+
+snap_shock.ipynb evaluates whether changes in food-shelf activity around SNAP policy changes differ according to county SNAP exposure.
+
+spatial_access.ipynb checks physical site locations and estimates geographic food-shelf access using Census population centers and site coordinates.
+
+explain_ratio.ipynb performs the funnel analysis, multi-year persistence test, physical-county sensitivity, county-characteristic models, robustness checks, and final Q6 synthesis.
